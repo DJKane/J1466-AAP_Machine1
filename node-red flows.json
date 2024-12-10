@@ -1,0 +1,460 @@
+[
+    {
+        "id": "3440a881a697772b",
+        "type": "tab",
+        "label": "IIoT Framework",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "0fc9918f144a1af4",
+        "type": "group",
+        "z": "3440a881a697772b",
+        "name": "InfluxDB",
+        "style": {
+            "label": true,
+            "color": "#ffC000",
+            "stroke": "#ffC000"
+        },
+        "nodes": [
+            "d416a2c32b6a3395",
+            "53e98364424d36ac",
+            "b004ec3018aa069c",
+            "6990e71fae3f8d56"
+        ],
+        "x": 674,
+        "y": 59,
+        "w": 692,
+        "h": 122
+    },
+    {
+        "id": "7cc8981af9d12d54",
+        "type": "group",
+        "z": "3440a881a697772b",
+        "name": "Debug",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "3f097919fd678d9c",
+            "e0528f132509ce26"
+        ],
+        "x": 674,
+        "y": 479,
+        "w": 232,
+        "h": 122
+    },
+    {
+        "id": "c5b0e0c0c0fcc155",
+        "type": "group",
+        "z": "3440a881a697772b",
+        "name": "IIoT Framework",
+        "style": {
+            "label": true,
+            "stroke": "#007C84",
+            "color": "#007C84"
+        },
+        "nodes": [
+            "b5133416ca935fb7",
+            "6ff03737f3fc01b3",
+            "a6ab21e662d3d95e",
+            "365635816982e42b"
+        ],
+        "x": 14,
+        "y": 79,
+        "w": 612,
+        "h": 122
+    },
+    {
+        "id": "b5133416ca935fb7",
+        "type": "inject",
+        "z": "3440a881a697772b",
+        "g": "c5b0e0c0c0fcc155",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "6ff03737f3fc01b3"
+            ]
+        ]
+    },
+    {
+        "id": "6ff03737f3fc01b3",
+        "type": "plc-read-variables",
+        "z": "3440a881a697772b",
+        "g": "c5b0e0c0c0fcc155",
+        "plc_connector": "b17d34f713647319",
+        "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/Enable",
+        "searchbar": "",
+        "x": 390,
+        "y": 160,
+        "wires": [
+            [
+                "d416a2c32b6a3395",
+                "45fee89f8f461edf"
+            ]
+        ]
+    },
+    {
+        "id": "584b8b2cbefbb629",
+        "type": "comment",
+        "z": "3440a881a697772b",
+        "name": "Collect data from the IIoT Framework and send them to the activated Outputs",
+        "info": "",
+        "x": 290,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "d416a2c32b6a3395",
+        "type": "function",
+        "z": "3440a881a697772b",
+        "g": "0fc9918f144a1af4",
+        "name": "InfluxDB formatter",
+        "func": "// Init data array\nvar zones = msg.payload.variables[0].value\nvar data = []\n\n\ntry {\n    var datetime = Date.now();\n    for (var elem of zones){\n        \n        temperatureDataPoint = {\n            measurement:'temperature',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                PV:elem.PV,\n                SP:elem.SP,\n            },\n            strTimestamp: datetime,\n        };\n        \n        enabledDataPoint = {\n            measurement:'enabled',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Enabled,\n            },\n            strTimestamp: datetime,\n        };\n        \n        outputDataPoint = {\n            measurement:\"output\",\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Output,\n            },\n            strTimestamp: datetime,\n        };\n        \n        // Insert data points into data array\n        data.push(temperatureDataPoint);\n        data.push(enabledDataPoint);\n        data.push(outputDataPoint);\n    }\n    enableDataPoint = {\n        measurement:'enable',\n        fields:{\n            value:msg.payload.variables[1].value,\n        },\n        strTimestamp: datetime,\n    };\n    data.push(enableDataPoint);\n} catch (e) {\n    node.error(e);\n}\n\n// Hand over payload\nmsg.payload =  data\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 140,
+        "wires": [
+            [
+                "53e98364424d36ac"
+            ]
+        ]
+    },
+    {
+        "id": "53e98364424d36ac",
+        "type": "influxdb batch",
+        "z": "3440a881a697772b",
+        "g": "0fc9918f144a1af4",
+        "influxdb": "3d4a2a7d7377b0aa",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "InfluxDB Batch",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "AAP",
+        "bucket": "MartinMachine1",
+        "x": 1120,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "3f097919fd678d9c",
+        "type": "debug",
+        "z": "3440a881a697772b",
+        "g": "7cc8981af9d12d54",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "b004ec3018aa069c",
+        "type": "comment",
+        "z": "3440a881a697772b",
+        "d": true,
+        "g": "0fc9918f144a1af4",
+        "name": "Configuration of InfluxDB Parameters",
+        "info": "",
+        "x": 1190,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "a6ab21e662d3d95e",
+        "type": "comment",
+        "z": "3440a881a697772b",
+        "g": "c5b0e0c0c0fcc155",
+        "name": "Configuration of PLCnext Parameters",
+        "info": "",
+        "x": 450,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "6990e71fae3f8d56",
+        "type": "comment",
+        "z": "3440a881a697772b",
+        "d": true,
+        "g": "0fc9918f144a1af4",
+        "name": "Activate Node to use InfluxDB",
+        "info": "",
+        "x": 820,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "e0528f132509ce26",
+        "type": "comment",
+        "z": "3440a881a697772b",
+        "d": true,
+        "g": "7cc8981af9d12d54",
+        "name": "Activate for Debug",
+        "info": "",
+        "x": 790,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "365635816982e42b",
+        "type": "comment",
+        "z": "3440a881a697772b",
+        "g": "c5b0e0c0c0fcc155",
+        "name": "Configuration of Update Time",
+        "info": "",
+        "x": 160,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "45fee89f8f461edf",
+        "type": "function",
+        "z": "3440a881a697772b",
+        "name": "Gefran Formatter",
+        "func": "var zones = msg.payload.variables[0].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    makeWord(zones[8].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[9].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[10].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[11].SP),\n    0,\n    0,\n    0,\n]\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 280,
+        "wires": [
+            [
+                "4ac7e820c618f863",
+                "3f097919fd678d9c"
+            ]
+        ]
+    },
+    {
+        "id": "1eacbd595086d83a",
+        "type": "modbus-getter",
+        "z": "3440a881a697772b",
+        "name": "Read3",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "13",
+        "dataType": "HoldingRegister",
+        "adr": "0",
+        "quantity": "18",
+        "server": "0940c7eaf853d63f",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 250,
+        "y": 920,
+        "wires": [
+            [
+                "6ffcb4ba3aabfc62"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "9cdff71e07c6ebd1",
+        "type": "inject",
+        "z": "3440a881a697772b",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 920,
+        "wires": [
+            [
+                "1eacbd595086d83a"
+            ]
+        ]
+    },
+    {
+        "id": "03bcd98d7f2bae64",
+        "type": "comment",
+        "z": "3440a881a697772b",
+        "name": "Max 18 registers",
+        "info": "Max 18 registers per request",
+        "x": 240,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "3f077fa28ba7ecf2",
+        "type": "plc-write-variables",
+        "z": "3440a881a697772b",
+        "plc_connector": "b17d34f713647319",
+        "vars": "",
+        "var_list": "{\"items\":[]}",
+        "searchbar": "Arp.Plc.Eclr/Zone[9].PV",
+        "x": 630,
+        "y": 900,
+        "wires": [
+            [
+                "d46410f8d090dfd5"
+            ]
+        ]
+    },
+    {
+        "id": "6ffcb4ba3aabfc62",
+        "type": "function",
+        "z": "3440a881a697772b",
+        "name": "PLCnext Formatter",
+        "func": "values = msg.payload;\nmsg.payload = {\n    variables: [\n        {path:\"Arp.Plc.Eclr/Zone[09].PV\"    ,value:values[00],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[09].SPA\"   ,value:values[01],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[09].Output\",value:values[02],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[09].Amps\"  ,value:values[03],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[10].PV\"    ,value:values[04],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[10].SPA\"   ,value:values[05],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[10].Output\",value:values[06],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[10].Amps\"  ,value:values[07],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[11].PV\"    ,value:values[08],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[11].SPA\"   ,value:values[09],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[11].Output\",value:values[10],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[11].Amps\"  ,value:values[11],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[12].PV\"    ,value:values[12],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[12].SPA\"   ,value:values[13],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[12].Output\",value:values[14],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[12].Amps\"  ,value:values[15],valueType:\"Constant\"},\n    ]\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 900,
+        "wires": [
+            [
+                "3f077fa28ba7ecf2",
+                "d46410f8d090dfd5"
+            ]
+        ]
+    },
+    {
+        "id": "d46410f8d090dfd5",
+        "type": "debug",
+        "z": "3440a881a697772b",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "4ac7e820c618f863",
+        "type": "modbus-write",
+        "z": "3440a881a697772b",
+        "name": "Write3",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "unitid": "13",
+        "dataType": "MHoldingRegisters",
+        "adr": "32",
+        "quantity": "16",
+        "server": "0940c7eaf853d63f",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 950,
+        "y": 280,
+        "wires": [
+            [
+                "3f097919fd678d9c"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b17d34f713647319",
+        "type": "plc-connector",
+        "host": "192.168.2.10",
+        "station_name": "",
+        "session_timeout": "5000",
+        "api_version": "v1.4",
+        "auth_required": "true"
+    },
+    {
+        "id": "3d4a2a7d7377b0aa",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "InfluxDB",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://192.168.2.10:58086/",
+        "timeout": "",
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "0940c7eaf853d63f",
+        "type": "modbus-client",
+        "name": "Gefran3",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.2.13",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "13",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showErrors": true,
+        "showWarnings": true,
+        "showLogs": true
+    }
+]
