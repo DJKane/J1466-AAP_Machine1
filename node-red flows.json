@@ -1,6 +1,6 @@
 [
     {
-        "id": "3440a881a697772b",
+        "id": "436938ed0226b400",
         "type": "tab",
         "label": "IIoT Framework",
         "disabled": false,
@@ -8,9 +8,9 @@
         "env": []
     },
     {
-        "id": "0fc9918f144a1af4",
+        "id": "855f100ad1ed0d83",
         "type": "group",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "InfluxDB",
         "style": {
             "label": true,
@@ -18,10 +18,10 @@
             "stroke": "#ffC000"
         },
         "nodes": [
-            "d416a2c32b6a3395",
-            "53e98364424d36ac",
-            "b004ec3018aa069c",
-            "6990e71fae3f8d56"
+            "a065451c8ef21680",
+            "55d173a5d1af18c5",
+            "bf161cf8f286509b",
+            "e35ed33b9a25df84"
         ],
         "x": 674,
         "y": 59,
@@ -29,17 +29,17 @@
         "h": 122
     },
     {
-        "id": "7cc8981af9d12d54",
+        "id": "4042154c40569621",
         "type": "group",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "Debug",
         "style": {
             "label": true
         },
         "nodes": [
-            "3f097919fd678d9c",
-            "e0528f132509ce26",
-            "d46410f8d090dfd5"
+            "16b6d420cc2489ee",
+            "a442b160679ec293",
+            "4d4d03b4e17922f0"
         ],
         "x": 674,
         "y": 479,
@@ -47,9 +47,9 @@
         "h": 122
     },
     {
-        "id": "c5b0e0c0c0fcc155",
+        "id": "7bc25815b54b0434",
         "type": "group",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "IIoT Framework",
         "style": {
             "label": true,
@@ -57,10 +57,10 @@
             "color": "#007C84"
         },
         "nodes": [
-            "b5133416ca935fb7",
-            "6ff03737f3fc01b3",
-            "a6ab21e662d3d95e",
-            "365635816982e42b"
+            "7f1541e8e1b6263c",
+            "5294ea4c36e0e1c9",
+            "d9e788a3d10b9e3c",
+            "4fd6f30510f85dca"
         ],
         "x": 14,
         "y": 79,
@@ -68,10 +68,10 @@
         "h": 122
     },
     {
-        "id": "b5133416ca935fb7",
+        "id": "7f1541e8e1b6263c",
         "type": "inject",
-        "z": "3440a881a697772b",
-        "g": "c5b0e0c0c0fcc155",
+        "z": "436938ed0226b400",
+        "g": "7bc25815b54b0434",
         "name": "",
         "props": [
             {
@@ -89,15 +89,15 @@
         "y": 160,
         "wires": [
             [
-                "6ff03737f3fc01b3"
+                "5294ea4c36e0e1c9"
             ]
         ]
     },
     {
-        "id": "6ff03737f3fc01b3",
+        "id": "5294ea4c36e0e1c9",
         "type": "plc-read-variables",
-        "z": "3440a881a697772b",
-        "g": "c5b0e0c0c0fcc155",
+        "z": "436938ed0226b400",
+        "g": "7bc25815b54b0434",
         "plc_connector": "b17d34f713647319",
         "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/Enable",
         "searchbar": "",
@@ -105,17 +105,17 @@
         "y": 160,
         "wires": [
             [
-                "d416a2c32b6a3395",
-                "45fee89f8f461edf",
-                "e76afd4e8a8515b5",
-                "dcae906705954d6a"
+                "a065451c8ef21680",
+                "e82fd5257ec62d60",
+                "6bed1dc1f48fe28f",
+                "62e6758790924ffe"
             ]
         ]
     },
     {
-        "id": "584b8b2cbefbb629",
+        "id": "1d1d36485100409f",
         "type": "comment",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "Collect data from the IIoT Framework and send them to the activated Outputs",
         "info": "",
         "x": 290,
@@ -123,10 +123,10 @@
         "wires": []
     },
     {
-        "id": "d416a2c32b6a3395",
+        "id": "a065451c8ef21680",
         "type": "function",
-        "z": "3440a881a697772b",
-        "g": "0fc9918f144a1af4",
+        "z": "436938ed0226b400",
+        "g": "855f100ad1ed0d83",
         "name": "InfluxDB formatter",
         "func": "// Init data array\nvar zones = msg.payload.variables[0].value\nvar data = []\n\n\ntry {\n    var datetime = Date.now();\n    for (var elem of zones){\n        \n        temperatureDataPoint = {\n            measurement:'temperature',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                PV:elem.PV,\n                SP:elem.SP,\n            },\n            strTimestamp: datetime,\n        };\n        \n        enabledDataPoint = {\n            measurement:'enabled',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Enabled,\n            },\n            strTimestamp: datetime,\n        };\n        \n        outputDataPoint = {\n            measurement:\"output\",\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Output,\n            },\n            strTimestamp: datetime,\n        };\n        \n        // Insert data points into data array\n        data.push(temperatureDataPoint);\n        data.push(enabledDataPoint);\n        data.push(outputDataPoint);\n    }\n    enableDataPoint = {\n        measurement:'enable',\n        fields:{\n            value:msg.payload.variables[1].value,\n        },\n        strTimestamp: datetime,\n    };\n    data.push(enableDataPoint);\n} catch (e) {\n    node.error(e);\n}\n\n// Hand over payload\nmsg.payload =  data\n\nreturn msg;",
         "outputs": 1,
@@ -139,15 +139,16 @@
         "y": 140,
         "wires": [
             [
-                "53e98364424d36ac"
+                "55d173a5d1af18c5",
+                "16b6d420cc2489ee"
             ]
         ]
     },
     {
-        "id": "53e98364424d36ac",
+        "id": "55d173a5d1af18c5",
         "type": "influxdb batch",
-        "z": "3440a881a697772b",
-        "g": "0fc9918f144a1af4",
+        "z": "436938ed0226b400",
+        "g": "855f100ad1ed0d83",
         "influxdb": "3d4a2a7d7377b0aa",
         "precision": "",
         "retentionPolicy": "",
@@ -155,17 +156,17 @@
         "database": "database",
         "precisionV18FluxV20": "ms",
         "retentionPolicyV18Flux": "",
-        "org": "AAP",
-        "bucket": "MartinMachine1",
+        "org": "keg",
+        "bucket": "AAP",
         "x": 1120,
         "y": 140,
         "wires": []
     },
     {
-        "id": "3f097919fd678d9c",
+        "id": "16b6d420cc2489ee",
         "type": "debug",
-        "z": "3440a881a697772b",
-        "g": "7cc8981af9d12d54",
+        "z": "436938ed0226b400",
+        "g": "4042154c40569621",
         "name": "debug 2",
         "active": false,
         "tosidebar": true,
@@ -180,11 +181,11 @@
         "wires": []
     },
     {
-        "id": "b004ec3018aa069c",
+        "id": "bf161cf8f286509b",
         "type": "comment",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "d": true,
-        "g": "0fc9918f144a1af4",
+        "g": "855f100ad1ed0d83",
         "name": "Configuration of InfluxDB Parameters",
         "info": "",
         "x": 1190,
@@ -192,10 +193,10 @@
         "wires": []
     },
     {
-        "id": "a6ab21e662d3d95e",
+        "id": "d9e788a3d10b9e3c",
         "type": "comment",
-        "z": "3440a881a697772b",
-        "g": "c5b0e0c0c0fcc155",
+        "z": "436938ed0226b400",
+        "g": "7bc25815b54b0434",
         "name": "Configuration of PLCnext Parameters",
         "info": "",
         "x": 450,
@@ -203,11 +204,11 @@
         "wires": []
     },
     {
-        "id": "6990e71fae3f8d56",
+        "id": "e35ed33b9a25df84",
         "type": "comment",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "d": true,
-        "g": "0fc9918f144a1af4",
+        "g": "855f100ad1ed0d83",
         "name": "Activate Node to use InfluxDB",
         "info": "",
         "x": 820,
@@ -215,11 +216,11 @@
         "wires": []
     },
     {
-        "id": "e0528f132509ce26",
+        "id": "a442b160679ec293",
         "type": "comment",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "d": true,
-        "g": "7cc8981af9d12d54",
+        "g": "4042154c40569621",
         "name": "Activate for Debug",
         "info": "",
         "x": 790,
@@ -227,10 +228,10 @@
         "wires": []
     },
     {
-        "id": "365635816982e42b",
+        "id": "4fd6f30510f85dca",
         "type": "comment",
-        "z": "3440a881a697772b",
-        "g": "c5b0e0c0c0fcc155",
+        "z": "436938ed0226b400",
+        "g": "7bc25815b54b0434",
         "name": "Configuration of Update Time",
         "info": "",
         "x": 160,
@@ -238,11 +239,11 @@
         "wires": []
     },
     {
-        "id": "45fee89f8f461edf",
+        "id": "e82fd5257ec62d60",
         "type": "function",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "Gefran3 Formatter",
-        "func": "var zones = msg.payload.variables[0].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    makeWord(zones[8].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[9].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[10].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[11].SP),\n    0,\n    0,\n    0,\n]\nreturn msg;",
+        "func": "var zones = msg.payload.variables[0].value\nvar enable = msg.payload.variables[1].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(zones[8+z].SP);\n    msg.payload[z*4+1] = makeWord(((enable && zones[8+z].Enable)?0:8) + (zones[8+z].SelfTune?4:0));\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -253,44 +254,14 @@
         "y": 340,
         "wires": [
             [
-                "4ac7e820c618f863"
+                "b77d91e366242fb4"
             ]
         ]
     },
     {
-        "id": "1eacbd595086d83a",
-        "type": "modbus-getter",
-        "z": "3440a881a697772b",
-        "name": "Read3",
-        "showStatusActivities": false,
-        "showErrors": true,
-        "showWarnings": true,
-        "logIOActivities": false,
-        "unitid": "13",
-        "dataType": "HoldingRegister",
-        "adr": "0",
-        "quantity": "18",
-        "server": "0940c7eaf853d63f",
-        "useIOFile": false,
-        "ioFile": "",
-        "useIOForPayload": false,
-        "emptyMsgOnFail": false,
-        "keepMsgProperties": false,
-        "delayOnStart": false,
-        "startDelayTime": "",
-        "x": 290,
-        "y": 1000,
-        "wires": [
-            [
-                "6ffcb4ba3aabfc62"
-            ],
-            []
-        ]
-    },
-    {
-        "id": "9cdff71e07c6ebd1",
+        "id": "1662fb1345ef9c0e",
         "type": "inject",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "",
         "props": [
             {
@@ -301,27 +272,27 @@
                 "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "1",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 100,
+        "x": 110,
         "y": 960,
         "wires": [
             [
-                "1eacbd595086d83a",
-                "db60bd7d4cf2bde6",
-                "9bc1df06da612299"
+                "bc324e90c64a521d",
+                "f2f94d02a3cf3ff0",
+                "c1aaa25e415e4c68"
             ]
         ]
     },
     {
-        "id": "03bcd98d7f2bae64",
+        "id": "737ff726a8dd25ed",
         "type": "comment",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "Max 18 registers",
         "info": "Max 18 registers per request",
         "x": 240,
@@ -329,9 +300,9 @@
         "wires": []
     },
     {
-        "id": "3f077fa28ba7ecf2",
+        "id": "5683f8de25a1d598",
         "type": "plc-write-variables",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "plc_connector": "b17d34f713647319",
         "vars": "",
         "var_list": "{\"items\":[]}",
@@ -339,15 +310,17 @@
         "x": 750,
         "y": 960,
         "wires": [
-            []
+            [
+                "4d4d03b4e17922f0"
+            ]
         ]
     },
     {
-        "id": "6ffcb4ba3aabfc62",
+        "id": "25d5d366b9d1e4f2",
         "type": "function",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "PLCnext Formatter 3",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: [\n        {path:\"Arp.Plc.Eclr/Zone[09].PV\"    ,value:values[00],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[09].SPA\"   ,value:values[01],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[09].Output\",value:values[02],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[09].Amps\"  ,value:values[03],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[10].PV\"    ,value:values[04],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[10].SPA\"   ,value:values[05],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[10].Output\",value:values[06],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[10].Amps\"  ,value:values[07],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[11].PV\"    ,value:values[08],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[11].SPA\"   ,value:values[09],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[11].Output\",value:values[10],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[11].Amps\"  ,value:values[11],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[12].PV\"    ,value:values[12],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[12].SPA\"   ,value:values[13],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[12].Output\",value:values[14],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[12].Amps\"  ,value:values[15],valueType:\"Constant\"},\n    ]\n}\nreturn msg;",
+        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+8,\"PV\",values[z*4+0]);\n    msg.payload.variables[z*4+1] = makeVariable(z+8,\"SPA\",values[z*4+1]);\n    msg.payload.variables[z*4+2] = makeVariable(z+8,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+8,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -358,15 +331,15 @@
         "y": 1000,
         "wires": [
             [
-                "3f077fa28ba7ecf2"
+                "5683f8de25a1d598"
             ]
         ]
     },
     {
-        "id": "d46410f8d090dfd5",
+        "id": "4d4d03b4e17922f0",
         "type": "debug",
-        "z": "3440a881a697772b",
-        "g": "7cc8981af9d12d54",
+        "z": "436938ed0226b400",
+        "g": "4042154c40569621",
         "name": "debug 3",
         "active": false,
         "tosidebar": true,
@@ -380,35 +353,11 @@
         "wires": []
     },
     {
-        "id": "4ac7e820c618f863",
-        "type": "modbus-write",
-        "z": "3440a881a697772b",
-        "name": "Write3",
-        "showStatusActivities": false,
-        "showErrors": true,
-        "showWarnings": true,
-        "unitid": "13",
-        "dataType": "MHoldingRegisters",
-        "adr": "32",
-        "quantity": "16",
-        "server": "0940c7eaf853d63f",
-        "emptyMsgOnFail": false,
-        "keepMsgProperties": false,
-        "delayOnStart": false,
-        "startDelayTime": "",
-        "x": 950,
-        "y": 340,
-        "wires": [
-            [],
-            []
-        ]
-    },
-    {
-        "id": "e76afd4e8a8515b5",
+        "id": "6bed1dc1f48fe28f",
         "type": "function",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "Gefran2 Formatter",
-        "func": "var zones = msg.payload.variables[0].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    makeWord(zones[4].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[5].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[6].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[7].SP),\n    0,\n    0,\n    0,\n]\nreturn msg;",
+        "func": "var zones = msg.payload.variables[0].value\nvar enable = msg.payload.variables[1].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(zones[4+z].SP);\n    msg.payload[z*4+1] = makeWord(((enable && zones[4+z].Enable)?0:8) + (zones[4+z].SelfTune?4:0));\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -419,40 +368,16 @@
         "y": 300,
         "wires": [
             [
-                "753354068cf5d5fb"
+                "6e986fd5c9c6a208"
             ]
         ]
     },
     {
-        "id": "753354068cf5d5fb",
-        "type": "modbus-write",
-        "z": "3440a881a697772b",
-        "name": "Write2",
-        "showStatusActivities": false,
-        "showErrors": true,
-        "showWarnings": true,
-        "unitid": "12",
-        "dataType": "MHoldingRegisters",
-        "adr": "32",
-        "quantity": "16",
-        "server": "210318addaf561c0",
-        "emptyMsgOnFail": false,
-        "keepMsgProperties": false,
-        "delayOnStart": false,
-        "startDelayTime": "",
-        "x": 950,
-        "y": 300,
-        "wires": [
-            [],
-            []
-        ]
-    },
-    {
-        "id": "dcae906705954d6a",
+        "id": "62e6758790924ffe",
         "type": "function",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "Gefran1 Formatter",
-        "func": "var zones = msg.payload.variables[0].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    makeWord(zones[0].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[1].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[2].SP),\n    0,\n    0,\n    0,\n    makeWord(zones[3].SP),\n    0,\n    0,\n    0,\n]\nreturn msg;",
+        "func": "var zones = msg.payload.variables[0].value\nvar enable = msg.payload.variables[1].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(zones[z].SP);\n    msg.payload[z*4+1] = makeWord(((enable && zones[z].Enable)?0:8) + (zones[z].SelfTune?4:0));\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -463,40 +388,16 @@
         "y": 260,
         "wires": [
             [
-                "569ceb590383e88b"
+                "ae3ce5dd92d8f904"
             ]
         ]
     },
     {
-        "id": "569ceb590383e88b",
-        "type": "modbus-write",
-        "z": "3440a881a697772b",
-        "name": "Write1",
-        "showStatusActivities": false,
-        "showErrors": true,
-        "showWarnings": true,
-        "unitid": "11",
-        "dataType": "MHoldingRegisters",
-        "adr": "32",
-        "quantity": "16",
-        "server": "4bf0aefd99b084dd",
-        "emptyMsgOnFail": false,
-        "keepMsgProperties": false,
-        "delayOnStart": false,
-        "startDelayTime": "",
-        "x": 950,
-        "y": 260,
-        "wires": [
-            [],
-            []
-        ]
-    },
-    {
-        "id": "bd9f58f00b910e08",
+        "id": "1abaac0d277300f1",
         "type": "function",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "PLCnext Formatter 2",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: [\n        {path:\"Arp.Plc.Eclr/Zone[05].PV\"    ,value:values[00],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[05].SPA\"   ,value:values[01],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[05].Output\",value:values[02],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[05].Amps\"  ,value:values[03],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[06].PV\"    ,value:values[04],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[06].SPA\"   ,value:values[05],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[06].Output\",value:values[06],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[06].Amps\"  ,value:values[07],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[07].PV\"    ,value:values[08],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[07].SPA\"   ,value:values[09],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[07].Output\",value:values[10],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[07].Amps\"  ,value:values[11],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[08].PV\"    ,value:values[12],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[08].SPA\"   ,value:values[13],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[08].Output\",value:values[14],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[08].Amps\"  ,value:values[15],valueType:\"Constant\"},\n    ]\n}\nreturn msg;",
+        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+5,\"PV\",values[z*4+0]);\n    msg.payload.variables[z*4+1] = makeVariable(z+5,\"SPA\",values[z*4+1]);\n    msg.payload.variables[z*4+2] = makeVariable(z+5,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+5,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -507,16 +408,16 @@
         "y": 960,
         "wires": [
             [
-                "3f077fa28ba7ecf2"
+                "5683f8de25a1d598"
             ]
         ]
     },
     {
-        "id": "60370387af30ad8d",
+        "id": "59151a69276feef8",
         "type": "function",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "PLCnext Formatter 1",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: [\n        {path:\"Arp.Plc.Eclr/Zone[01].PV\"    ,value:values[00],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[01].SPA\"   ,value:values[01],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[01].Output\",value:values[02],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[01].Amps\"  ,value:values[03],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[02].PV\"    ,value:values[04],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[02].SPA\"   ,value:values[05],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[02].Output\",value:values[06],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[02].Amps\"  ,value:values[07],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[03].PV\"    ,value:values[08],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[03].SPA\"   ,value:values[09],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[03].Output\",value:values[10],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[03].Amps\"  ,value:values[11],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[04].PV\"    ,value:values[12],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[04].SPA\"   ,value:values[13],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[04].Output\",value:values[14],valueType:\"Constant\"},\n        {path:\"Arp.Plc.Eclr/Zone[04].Amps\"  ,value:values[15],valueType:\"Constant\"},\n    ]\n}\nreturn msg;",
+        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+1,\"PV\",values[z*4+0]);\n    msg.payload.variables[z*4+1] = makeVariable(z+1,\"SPA\",values[z*4+1]);\n    msg.payload.variables[z*4+2] = makeVariable(z+1,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+1,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -527,14 +428,45 @@
         "y": 920,
         "wires": [
             [
-                "3f077fa28ba7ecf2"
+                "5683f8de25a1d598"
             ]
         ]
     },
     {
-        "id": "db60bd7d4cf2bde6",
+        "id": "bc324e90c64a521d",
         "type": "modbus-getter",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
+        "d": true,
+        "name": "Read3",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "13",
+        "dataType": "HoldingRegister",
+        "adr": "0",
+        "quantity": "18",
+        "server": "b826498401685724",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 290,
+        "y": 1000,
+        "wires": [
+            [
+                "25d5d366b9d1e4f2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "f2f94d02a3cf3ff0",
+        "type": "modbus-getter",
+        "z": "436938ed0226b400",
         "name": "Read2",
         "showStatusActivities": false,
         "showErrors": true,
@@ -544,7 +476,7 @@
         "dataType": "HoldingRegister",
         "adr": "0",
         "quantity": "18",
-        "server": "210318addaf561c0",
+        "server": "6bb6fa456075eb32",
         "useIOFile": false,
         "ioFile": "",
         "useIOForPayload": false,
@@ -556,15 +488,15 @@
         "y": 960,
         "wires": [
             [
-                "bd9f58f00b910e08"
+                "1abaac0d277300f1"
             ],
             []
         ]
     },
     {
-        "id": "9bc1df06da612299",
+        "id": "c1aaa25e415e4c68",
         "type": "modbus-getter",
-        "z": "3440a881a697772b",
+        "z": "436938ed0226b400",
         "name": "Read1",
         "showStatusActivities": false,
         "showErrors": true,
@@ -574,7 +506,7 @@
         "dataType": "HoldingRegister",
         "adr": "0",
         "quantity": "18",
-        "server": "4bf0aefd99b084dd",
+        "server": "03d24f212f3a0679",
         "useIOFile": false,
         "ioFile": "",
         "useIOForPayload": false,
@@ -586,7 +518,86 @@
         "y": 920,
         "wires": [
             [
-                "60370387af30ad8d"
+                "59151a69276feef8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b77d91e366242fb4",
+        "type": "modbus-write",
+        "z": "436938ed0226b400",
+        "d": true,
+        "name": "Write3",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "unitid": "13",
+        "dataType": "MHoldingRegisters",
+        "adr": "32",
+        "quantity": "16",
+        "server": "b826498401685724",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 950,
+        "y": 340,
+        "wires": [
+            [
+                "16b6d420cc2489ee"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "6e986fd5c9c6a208",
+        "type": "modbus-write",
+        "z": "436938ed0226b400",
+        "name": "Write2",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "unitid": "12",
+        "dataType": "MHoldingRegisters",
+        "adr": "32",
+        "quantity": "16",
+        "server": "6bb6fa456075eb32",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 950,
+        "y": 300,
+        "wires": [
+            [
+                "16b6d420cc2489ee"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "ae3ce5dd92d8f904",
+        "type": "modbus-write",
+        "z": "436938ed0226b400",
+        "name": "Write1",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "unitid": "11",
+        "dataType": "MHoldingRegisters",
+        "adr": "32",
+        "quantity": "16",
+        "server": "03d24f212f3a0679",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 950,
+        "y": 260,
+        "wires": [
+            [
+                "16b6d420cc2489ee"
             ],
             []
         ]
@@ -607,7 +618,7 @@
         "port": "8086",
         "protocol": "http",
         "database": "database",
-        "name": "InfluxDB",
+        "name": "influxdb",
         "usetls": false,
         "tls": "",
         "influxdbVersion": "2.0",
@@ -616,7 +627,7 @@
         "rejectUnauthorized": false
     },
     {
-        "id": "0940c7eaf853d63f",
+        "id": "b826498401685724",
         "type": "modbus-client",
         "name": "Gefran3",
         "clienttype": "tcp",
@@ -646,7 +657,7 @@
         "showLogs": true
     },
     {
-        "id": "210318addaf561c0",
+        "id": "6bb6fa456075eb32",
         "type": "modbus-client",
         "name": "Gefran2",
         "clienttype": "tcp",
@@ -676,7 +687,7 @@
         "showLogs": true
     },
     {
-        "id": "4bf0aefd99b084dd",
+        "id": "03d24f212f3a0679",
         "type": "modbus-client",
         "name": "Gefran1",
         "clienttype": "tcp",
@@ -695,13 +706,13 @@
         "serialParity": "none",
         "serialConnectionDelay": "100",
         "serialAsciiResponseStartDelimiter": "0x3A",
-        "unit_id": "11",
-        "commandDelay": "1",
-        "clientTimeout": "1000",
+        "unit_id": 11,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
         "reconnectOnTimeout": true,
-        "reconnectTimeout": "2000",
+        "reconnectTimeout": 2000,
         "parallelUnitIdsAllowed": true,
-        "showErrors": false,
+        "showErrors": true,
         "showWarnings": true,
         "showLogs": true
     }
