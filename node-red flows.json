@@ -39,12 +39,13 @@
         "nodes": [
             "16b6d420cc2489ee",
             "a442b160679ec293",
-            "4d4d03b4e17922f0"
+            "4d4d03b4e17922f0",
+            "86a908787636fac8"
         ],
         "x": 674,
-        "y": 479,
-        "w": 652,
-        "h": 122
+        "y": 319,
+        "w": 692,
+        "h": 282
     },
     {
         "id": "7bc25815b54b0434",
@@ -78,18 +79,19 @@
                 "p": "payload"
             }
         ],
-        "repeat": "",
+        "repeat": "1",
         "crontab": "",
-        "once": false,
+        "once": true,
         "onceDelay": "1",
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 120,
+        "x": 130,
         "y": 160,
         "wires": [
             [
-                "5294ea4c36e0e1c9"
+                "5294ea4c36e0e1c9",
+                "e096142bb2f6ac45"
             ]
         ]
     },
@@ -128,7 +130,7 @@
         "z": "436938ed0226b400",
         "g": "855f100ad1ed0d83",
         "name": "InfluxDB formatter",
-        "func": "// Init data array\nvar zones = msg.payload.variables[0].value\nvar data = []\n\n\ntry {\n    var datetime = Date.now();\n    for (var elem of zones){\n        \n        temperatureDataPoint = {\n            measurement:'temperature',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                PV:elem.PV,\n                SP:elem.SP,\n            },\n            strTimestamp: datetime,\n        };\n        \n        enabledDataPoint = {\n            measurement:'enabled',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Enabled,\n            },\n            strTimestamp: datetime,\n        };\n        \n        outputDataPoint = {\n            measurement:\"output\",\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Output,\n            },\n            strTimestamp: datetime,\n        };\n        \n        // Insert data points into data array\n        data.push(temperatureDataPoint);\n        data.push(enabledDataPoint);\n        data.push(outputDataPoint);\n    }\n    enableDataPoint = {\n        measurement:'enable',\n        fields:{\n            value:msg.payload.variables[1].value,\n        },\n        strTimestamp: datetime,\n    };\n    data.push(enableDataPoint);\n} catch (e) {\n    node.error(e);\n}\n\n// Hand over payload\nmsg.payload =  data\n\nreturn msg;",
+        "func": "// Init data array\nvar zones = msg.payload.variables[0].value\nvar data = []\n\ntry {\n    var datetime = Date.now();\n    for (var elem of zones){\n        \n        temperatureDataPoint = {\n            measurement:'temperature',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                PV:elem.PV,\n                SP:elem.SPA,\n            },\n            strTimestamp: datetime,\n        };\n        \n        enabledDataPoint = {\n            measurement:'enabled',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Enabled,\n            },\n            strTimestamp: datetime,\n        };\n        \n        outputDataPoint = {\n            measurement:\"output\",\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Output,\n            },\n            strTimestamp: datetime,\n        };\n        \n        // Insert data points into data array\n        data.push(temperatureDataPoint);\n        data.push(enabledDataPoint);\n        data.push(outputDataPoint);\n    }\n    enableDataPoint = {\n        measurement:'enable',\n        fields:{\n            value:msg.payload.variables[1].value,\n        },\n        strTimestamp: datetime,\n    };\n    data.push(enableDataPoint);\n} catch (e) {\n    node.error(e);\n}\n\n// Hand over payload\nmsg.payload =  data\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -140,7 +142,7 @@
         "wires": [
             [
                 "55d173a5d1af18c5",
-                "16b6d420cc2489ee"
+                "86a908787636fac8"
             ]
         ]
     },
@@ -168,7 +170,7 @@
         "z": "436938ed0226b400",
         "g": "4042154c40569621",
         "name": "debug 2",
-        "active": false,
+        "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -177,7 +179,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1220,
-        "y": 520,
+        "y": 440,
         "wires": []
     },
     {
@@ -243,7 +245,7 @@
         "type": "function",
         "z": "436938ed0226b400",
         "name": "Gefran3 Formatter",
-        "func": "var zones = msg.payload.variables[0].value\nvar enable = msg.payload.variables[1].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(zones[8+z].SP);\n    msg.payload[z*4+1] = makeWord(((enable && zones[8+z].Enable)?0:8) + (zones[8+z].SelfTune?4:0));\n}\n\nreturn msg;",
+        "func": "var zones = msg.payload.variables[0].value;\nvar enable = msg.payload.variables[1].value;\nvar lastValues = global.get(\"Write3Vals\");\nvar anyChanges = false;\nvar tempOffset = 0;\nvar tempScale = 1;\n\nif (global.get(\"cToF\"))\n{\n    tempOffset = 32;\n    tempScale = 9/5;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num = 0;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord((zones[8+z].SP - tempOffset) / tempScale);\n    msg.payload[z*4+1] = makeWord(((enable && zones[8+z].Enable)?0:8) + (zones[8+z].SelfTune?4:0));\n}\n\nif (Array.isArray(lastValues))\n{\n    for (var i = 0; i < 16; i++)\n    {\n        if (msg.payload[i] != lastValues[i])\n        {\n            anyChanges = true;\n            break;\n        }\n    }\n}\nelse\n{\n    anyChanges = true;\n}\n\nif (anyChanges)\n{\n    global.set(\"Write3Vals\", msg.payload);\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -254,7 +256,8 @@
         "y": 340,
         "wires": [
             [
-                "b77d91e366242fb4"
+                "b77d91e366242fb4",
+                "16b6d420cc2489ee"
             ]
         ]
     },
@@ -320,7 +323,7 @@
         "type": "function",
         "z": "436938ed0226b400",
         "name": "PLCnext Formatter 3",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+8,\"PV\",values[z*4+0]);\n    msg.payload.variables[z*4+1] = makeVariable(z+8,\"SPA\",values[z*4+1]);\n    msg.payload.variables[z*4+2] = makeVariable(z+8,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+8,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
+        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nvar tempOffset = 0;\nvar tempScale = 1;\n\nif (global.get(\"cToF\"))\n{\n    tempOffset = 32;\n    tempScale = 9/5;\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+9,\"PV\",values[z*4+0]*tempScale + tempOffset);\n    msg.payload.variables[z*4+1] = makeVariable(z+9,\"SPA\",values[z*4+1]*tempScale + tempOffset);\n    msg.payload.variables[z*4+2] = makeVariable(z+9,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+9,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -357,7 +360,7 @@
         "type": "function",
         "z": "436938ed0226b400",
         "name": "Gefran2 Formatter",
-        "func": "var zones = msg.payload.variables[0].value\nvar enable = msg.payload.variables[1].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(zones[4+z].SP);\n    msg.payload[z*4+1] = makeWord(((enable && zones[4+z].Enable)?0:8) + (zones[4+z].SelfTune?4:0));\n}\n\nreturn msg;",
+        "func": "var zones = msg.payload.variables[0].value;\nvar enable = msg.payload.variables[1].value;\nvar lastValues = global.get(\"Write2Vals\");\nvar anyChanges = false;\nvar tempOffset = 0;\nvar tempScale = 1;\n\nif (global.get(\"cToF\"))\n{\n    tempOffset = 32;\n    tempScale = 9/5;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num = 0;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord((zones[4+z].SP - tempOffset) / tempScale);\n    msg.payload[z*4+1] = makeWord(((enable && zones[4+z].Enable)?0:8) + (zones[4+z].SelfTune?4:0));\n}\n\n\nif (Array.isArray(lastValues))\n{\n    for (var i = 0; i < 16; i++)\n    {\n        if (msg.payload[i] != lastValues[i])\n        {\n            anyChanges = true;\n            break;\n        }\n    }\n}\nelse\n{\n    anyChanges = true;\n}\n\nif (anyChanges)\n{\n    global.set(\"Write2Vals\", msg.payload);\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -368,7 +371,8 @@
         "y": 300,
         "wires": [
             [
-                "6e986fd5c9c6a208"
+                "6e986fd5c9c6a208",
+                "16b6d420cc2489ee"
             ]
         ]
     },
@@ -377,7 +381,7 @@
         "type": "function",
         "z": "436938ed0226b400",
         "name": "Gefran1 Formatter",
-        "func": "var zones = msg.payload.variables[0].value\nvar enable = msg.payload.variables[1].value\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(zones[z].SP);\n    msg.payload[z*4+1] = makeWord(((enable && zones[z].Enable)?0:8) + (zones[z].SelfTune?4:0));\n}\n\nreturn msg;",
+        "func": "var zones = msg.payload.variables[0].value;\nvar enable = msg.payload.variables[1].value;\nvar lastValues = global.get(\"Write1Vals\");\nvar anyChanges = false;\nvar tempOffset = 0;\nvar tempScale = 1;\n\nif (global.get(\"cToF\"))\n{\n    tempOffset = 32;\n    tempScale = 9/5;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num = 0;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord((zones[z].SP - tempOffset) / tempScale);\n    msg.payload[z*4+1] = makeWord(((enable && zones[z].Enable)?0:8) + (zones[z].SelfTune?4:0));\n}\n\n\nif (Array.isArray(lastValues))\n{\n    for (var i = 0; i < 16; i++)\n    {\n        if (msg.payload[i] != lastValues[i])\n        {\n            anyChanges = true;\n            break;\n        }\n    }\n}\nelse\n{\n    anyChanges = true;\n}\n\nif (anyChanges)\n{\n    global.set(\"Write1Vals\", msg.payload);\n    return msg;\n}",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -388,7 +392,8 @@
         "y": 260,
         "wires": [
             [
-                "ae3ce5dd92d8f904"
+                "ae3ce5dd92d8f904",
+                "16b6d420cc2489ee"
             ]
         ]
     },
@@ -397,7 +402,7 @@
         "type": "function",
         "z": "436938ed0226b400",
         "name": "PLCnext Formatter 2",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+5,\"PV\",values[z*4+0]);\n    msg.payload.variables[z*4+1] = makeVariable(z+5,\"SPA\",values[z*4+1]);\n    msg.payload.variables[z*4+2] = makeVariable(z+5,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+5,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
+        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nvar tempOffset = 0;\nvar tempScale = 1;\n\nif (global.get(\"cToF\"))\n{\n    tempOffset = 32;\n    tempScale = 9/5;\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+5,\"PV\",values[z*4+0]*tempScale + tempOffset);\n    msg.payload.variables[z*4+1] = makeVariable(z+5,\"SPA\",values[z*4+1]*tempScale + tempOffset);\n    msg.payload.variables[z*4+2] = makeVariable(z+5,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+5,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -417,7 +422,7 @@
         "type": "function",
         "z": "436938ed0226b400",
         "name": "PLCnext Formatter 1",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+1,\"PV\",values[z*4+0]);\n    msg.payload.variables[z*4+1] = makeVariable(z+1,\"SPA\",values[z*4+1]);\n    msg.payload.variables[z*4+2] = makeVariable(z+1,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+1,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
+        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nvar tempOffset = 0;\nvar tempScale = 1;\n\nif (global.get(\"cToF\"))\n{\n    tempOffset = 32;\n    tempScale = 9/5;\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+1,\"PV\",values[z*4+0]*tempScale + tempOffset);\n    msg.payload.variables[z*4+1] = makeVariable(z+1,\"SPA\",values[z*4+1]*tempScale + tempOffset);\n    msg.payload.variables[z*4+2] = makeVariable(z+1,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+1,\"Amps\", values[z*4+3]);\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -436,7 +441,6 @@
         "id": "bc324e90c64a521d",
         "type": "modbus-getter",
         "z": "436938ed0226b400",
-        "d": true,
         "name": "Read3",
         "showStatusActivities": false,
         "showErrors": true,
@@ -527,7 +531,6 @@
         "id": "b77d91e366242fb4",
         "type": "modbus-write",
         "z": "436938ed0226b400",
-        "d": true,
         "name": "Write3",
         "showStatusActivities": false,
         "showErrors": true,
@@ -599,6 +602,48 @@
             [
                 "16b6d420cc2489ee"
             ],
+            []
+        ]
+    },
+    {
+        "id": "86a908787636fac8",
+        "type": "debug",
+        "z": "436938ed0226b400",
+        "g": "4042154c40569621",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "e096142bb2f6ac45",
+        "type": "change",
+        "z": "436938ed0226b400",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "cToF",
+                "pt": "global",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 320,
+        "y": 240,
+        "wires": [
             []
         ]
     },
