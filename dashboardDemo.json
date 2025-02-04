@@ -1,0 +1,451 @@
+[
+    {
+        "id": "94aba57176c341cb",
+        "type": "tab",
+        "label": "Force Dashboard Demo",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "076c18cfdd63a04f",
+        "type": "ui-slider",
+        "z": "94aba57176c341cb",
+        "group": "03b902d4f491113c",
+        "name": "Force Input",
+        "label": "Force",
+        "tooltip": "",
+        "order": 1,
+        "width": "12",
+        "height": "1",
+        "passthru": false,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "thumbLabel": "true",
+        "showTicks": "always",
+        "min": 0,
+        "max": "1000",
+        "step": 1,
+        "className": "",
+        "iconPrepend": "",
+        "iconAppend": "",
+        "color": "",
+        "colorTrack": "",
+        "colorThumb": "",
+        "showTextField": false,
+        "x": 150,
+        "y": 80,
+        "wires": [
+            [
+                "949dd42a67aca068"
+            ]
+        ]
+    },
+    {
+        "id": "949dd42a67aca068",
+        "type": "function",
+        "z": "94aba57176c341cb",
+        "name": "function 1",
+        "func": "var force = msg.payload;\n\nvar max = flow.get(\"max\") || 0;\nif (force > max)\n{\n    flow.set(\"max\", force);\n    flow.set(\"maxTime\", Date.now());\n}\n\nvar min = flow.get(\"min\") || 1000;\nif (force < min) {\n    flow.set(\"min\", force);\n    flow.set(\"minTime\", Date.now());\n}\n\nflow.set(\"force\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "173d9a34fd854658",
+        "type": "ui-chart",
+        "z": "94aba57176c341cb",
+        "group": "03b902d4f491113c",
+        "name": "1hr",
+        "label": "Hour",
+        "order": 6,
+        "chartType": "line",
+        "category": "",
+        "categoryType": "none",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "HH:mm",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Force",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "false",
+        "pointRadius": "1",
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": "3",
+        "className": "",
+        "interpolation": "linear",
+        "x": 490,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "475e5216af37c17f",
+        "type": "inject",
+        "z": "94aba57176c341cb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "ec386441789770f1",
+                "0515c741f111e174",
+                "f7fec2dcf3294e55"
+            ]
+        ]
+    },
+    {
+        "id": "ec386441789770f1",
+        "type": "function",
+        "z": "94aba57176c341cb",
+        "name": "function 2",
+        "func": "msg.payload = flow.get(\"force\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 180,
+        "wires": [
+            [
+                "173d9a34fd854658",
+                "cbe26b0734a3a3f0"
+            ]
+        ]
+    },
+    {
+        "id": "4124d923a462fa50",
+        "type": "ui-button",
+        "z": "94aba57176c341cb",
+        "group": "03b902d4f491113c",
+        "name": "Reset",
+        "label": "Reset",
+        "order": 2,
+        "width": "1",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "RESET",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "0515c741f111e174",
+                "f7fec2dcf3294e55"
+            ]
+        ]
+    },
+    {
+        "id": "cbe26b0734a3a3f0",
+        "type": "ui-chart",
+        "z": "94aba57176c341cb",
+        "group": "03b902d4f491113c",
+        "name": "1Min",
+        "label": "Minute",
+        "order": 5,
+        "chartType": "line",
+        "category": "",
+        "categoryType": "none",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "m:ss",
+        "xAxisFormatType": "custom",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Force",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "1000",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "60",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "12",
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 490,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "084b21861ff4025a",
+        "type": "ui-text",
+        "z": "94aba57176c341cb",
+        "group": "03b902d4f491113c",
+        "order": 4,
+        "width": "1",
+        "height": "1",
+        "name": "Max",
+        "label": "Max",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 490,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "486bfac60a36f51e",
+        "type": "ui-text",
+        "z": "94aba57176c341cb",
+        "group": "03b902d4f491113c",
+        "order": 3,
+        "width": "1",
+        "height": "1",
+        "name": "Min",
+        "label": "Min",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#717171",
+        "wrapText": false,
+        "className": "",
+        "x": 490,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "0515c741f111e174",
+        "type": "function",
+        "z": "94aba57176c341cb",
+        "name": "function 3",
+        "func": "if (msg.payload === \"RESET\")\n    flow.set(\"max\", flow.get(\"force\"));\nmsg.payload = \"\" + flow.get(\"max\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 300,
+        "wires": [
+            [
+                "084b21861ff4025a"
+            ]
+        ]
+    },
+    {
+        "id": "f7fec2dcf3294e55",
+        "type": "function",
+        "z": "94aba57176c341cb",
+        "name": "function 4",
+        "func": "if (msg.payload === \"RESET\")\n    flow.set(\"min\", flow.get(\"force\"));\nmsg.payload = \"\" + flow.get(\"min\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 340,
+        "wires": [
+            [
+                "486bfac60a36f51e"
+            ]
+        ]
+    },
+    {
+        "id": "03b902d4f491113c",
+        "type": "ui-group",
+        "name": "Force",
+        "page": "c89cd7e09083bd0a",
+        "width": "12",
+        "height": 1,
+        "order": 1,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "c89cd7e09083bd0a",
+        "type": "ui-page",
+        "name": "Page 1",
+        "ui": "d6b8a8a43f81d8f1",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "24d96fcd0aefa084",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "d6b8a8a43f81d8f1",
+        "type": "ui-base",
+        "name": "Force Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "dashboard",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true
+    },
+    {
+        "id": "24d96fcd0aefa084",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    }
+]
