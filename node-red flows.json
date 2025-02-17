@@ -8,6 +8,14 @@
         "env": []
     },
     {
+        "id": "b670c08ff0955fc3",
+        "type": "tab",
+        "label": "MQTT",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "855f100ad1ed0d83",
         "type": "group",
         "z": "436938ed0226b400",
@@ -67,6 +75,151 @@
         "y": 79,
         "w": 612,
         "h": 122
+    },
+    {
+        "id": "b17d34f713647319",
+        "type": "plc-connector",
+        "host": "192.168.2.10",
+        "station_name": "",
+        "session_timeout": "5000",
+        "api_version": "v1.4",
+        "auth_required": "true"
+    },
+    {
+        "id": "3d4a2a7d7377b0aa",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "influxdb",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://192.168.2.10:58086/",
+        "timeout": "",
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "b826498401685724",
+        "type": "modbus-client",
+        "name": "Gefran3",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.2.13",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "13",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showErrors": true,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "6bb6fa456075eb32",
+        "type": "modbus-client",
+        "name": "Gefran2",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.2.12",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "12",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showErrors": false,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "03d24f212f3a0679",
+        "type": "modbus-client",
+        "name": "Gefran1",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "192.168.2.11",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": 11,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": 2000,
+        "parallelUnitIdsAllowed": true,
+        "showErrors": true,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "770f0e200820a018",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.2.10",
+        "port": "51883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
     },
     {
         "id": "7f1541e8e1b6263c",
@@ -274,15 +427,15 @@
                 "vt": "str"
             }
         ],
-        "repeat": "1",
+        "repeat": "2",
         "crontab": "",
         "once": true,
         "onceDelay": 0.1,
-        "topic": "",
+        "topic": "requestA",
         "payload": "",
         "payloadType": "date",
-        "x": 110,
-        "y": 960,
+        "x": 120,
+        "y": 900,
         "wires": [
             [
                 "bc324e90c64a521d",
@@ -297,8 +450,8 @@
         "z": "436938ed0226b400",
         "name": "Max 18 registers",
         "info": "Max 18 registers per request",
-        "x": 240,
-        "y": 860,
+        "x": 480,
+        "y": 800,
         "wires": []
     },
     {
@@ -309,31 +462,11 @@
         "vars": "",
         "var_list": "{\"items\":[]}",
         "searchbar": "Arp.Plc.Eclr/Zone[9].PV",
-        "x": 750,
-        "y": 960,
+        "x": 930,
+        "y": 940,
         "wires": [
             [
                 "4d4d03b4e17922f0"
-            ]
-        ]
-    },
-    {
-        "id": "25d5d366b9d1e4f2",
-        "type": "function",
-        "z": "436938ed0226b400",
-        "name": "PLCnext Formatter 3",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+9,\"PV\",values[z*4+0]);\n    msg.payload.variables[z*4+1] = makeVariable(z+9,\"SPA\",values[z*4+1]);\n    msg.payload.variables[z*4+2] = makeVariable(z+9,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+9,\"Alarms\", values[z*4+3]);\n}\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 480,
-        "y": 1000,
-        "wires": [
-            [
-                "5683f8de25a1d598"
             ]
         ]
     },
@@ -397,39 +530,19 @@
         ]
     },
     {
-        "id": "1abaac0d277300f1",
-        "type": "function",
-        "z": "436938ed0226b400",
-        "name": "PLCnext Formatter 2",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[z*4+0] = makeVariable(z+5,\"PV\",values[z*4+0]);\n    msg.payload.variables[z*4+1] = makeVariable(z+5,\"SPA\",values[z*4+1]);\n    msg.payload.variables[z*4+2] = makeVariable(z+5,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[z*4+3] = makeVariable(z+5,\"Alarms\", values[z*4+3]);\n}\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 480,
-        "y": 960,
-        "wires": [
-            [
-                "5683f8de25a1d598"
-            ]
-        ]
-    },
-    {
         "id": "59151a69276feef8",
         "type": "function",
         "z": "436938ed0226b400",
-        "name": "PLCnext Formatter 1",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar i = 0;\nfor (var z=0; z<4; z++)\n{\n    msg.payload.variables[i++] = makeVariable(z+1,\"PV\",values[z*4+0]);\n    msg.payload.variables[i++] = makeVariable(z+1,\"SPA\",values[z*4+1]);\n    msg.payload.variables[i++] = makeVariable(z+1,\"Output\",values[z*4+2]*0.1);\n    msg.payload.variables[i++] = makeVariable(z+1,\"Alarms\",values[z*4+3]);\n}\n\nreturn msg;",
+        "name": "PLCnext Formatter",
+        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"11\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"12\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"13\")\n    firstZone = 9;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    if (msg.topic == \"requestA\")\n    {\n        msg.payload.variables[z*4+0] = makeVariable(z,\"PV\",values[z*4+0]);\n        msg.payload.variables[z*4+1] = makeVariable(z,\"SPA\",values[z*4+1]);\n        msg.payload.variables[z*4+2] = makeVariable(z,\"Output\",values[z*4+2]*0.1);\n        msg.payload.variables[z*4+3] = makeVariable(z,\"Alarms\",values[z*4+3]);\n    }\n    else if (msg.topic == \"requestB\")\n    {\n        msg.payload.variables[z] = makeVariable(z, \"Amps\", values[z*3+0]*0.1);\n    }\n}\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": 920,
+        "x": 710,
+        "y": 940,
         "wires": [
             [
                 "5683f8de25a1d598"
@@ -440,7 +553,7 @@
         "id": "bc324e90c64a521d",
         "type": "modbus-getter",
         "z": "436938ed0226b400",
-        "name": "Read3",
+        "name": "Read3a",
         "showStatusActivities": false,
         "showErrors": true,
         "showWarnings": true,
@@ -454,14 +567,14 @@
         "ioFile": "",
         "useIOForPayload": false,
         "emptyMsgOnFail": false,
-        "keepMsgProperties": false,
+        "keepMsgProperties": true,
         "delayOnStart": false,
         "startDelayTime": "",
-        "x": 290,
+        "x": 480,
         "y": 1000,
         "wires": [
             [
-                "25d5d366b9d1e4f2"
+                "59151a69276feef8"
             ],
             []
         ]
@@ -470,7 +583,7 @@
         "id": "f2f94d02a3cf3ff0",
         "type": "modbus-getter",
         "z": "436938ed0226b400",
-        "name": "Read2",
+        "name": "Read2a",
         "showStatusActivities": false,
         "showErrors": true,
         "showWarnings": true,
@@ -484,14 +597,14 @@
         "ioFile": "",
         "useIOForPayload": false,
         "emptyMsgOnFail": false,
-        "keepMsgProperties": false,
+        "keepMsgProperties": true,
         "delayOnStart": false,
         "startDelayTime": "",
-        "x": 290,
-        "y": 960,
+        "x": 480,
+        "y": 920,
         "wires": [
             [
-                "1abaac0d277300f1"
+                "59151a69276feef8"
             ],
             []
         ]
@@ -500,7 +613,7 @@
         "id": "c1aaa25e415e4c68",
         "type": "modbus-getter",
         "z": "436938ed0226b400",
-        "name": "Read1",
+        "name": "Read1a",
         "showStatusActivities": false,
         "showErrors": true,
         "showWarnings": true,
@@ -514,11 +627,11 @@
         "ioFile": "",
         "useIOForPayload": false,
         "emptyMsgOnFail": false,
-        "keepMsgProperties": false,
+        "keepMsgProperties": true,
         "delayOnStart": false,
         "startDelayTime": "",
-        "x": 290,
-        "y": 920,
+        "x": 480,
+        "y": 840,
         "wires": [
             [
                 "59151a69276feef8"
@@ -622,117 +735,250 @@
         "wires": []
     },
     {
-        "id": "b17d34f713647319",
-        "type": "plc-connector",
-        "host": "192.168.2.10",
-        "station_name": "",
-        "session_timeout": "5000",
-        "api_version": "v1.4",
-        "auth_required": "true"
-    },
-    {
-        "id": "3d4a2a7d7377b0aa",
-        "type": "influxdb",
-        "hostname": "127.0.0.1",
-        "port": "8086",
-        "protocol": "http",
-        "database": "database",
-        "name": "influxdb",
-        "usetls": false,
-        "tls": "",
-        "influxdbVersion": "2.0",
-        "url": "https://192.168.2.10:58086/",
-        "timeout": "",
-        "rejectUnauthorized": false
-    },
-    {
-        "id": "b826498401685724",
-        "type": "modbus-client",
-        "name": "Gefran3",
-        "clienttype": "tcp",
-        "bufferCommands": true,
-        "stateLogEnabled": false,
-        "queueLogEnabled": false,
-        "failureLogEnabled": true,
-        "tcpHost": "192.168.2.13",
-        "tcpPort": "502",
-        "tcpType": "DEFAULT",
-        "serialPort": "/dev/ttyUSB",
-        "serialType": "RTU-BUFFERD",
-        "serialBaudrate": "9600",
-        "serialDatabits": "8",
-        "serialStopbits": "1",
-        "serialParity": "none",
-        "serialConnectionDelay": "100",
-        "serialAsciiResponseStartDelimiter": "0x3A",
-        "unit_id": "13",
-        "commandDelay": "1",
-        "clientTimeout": "1000",
-        "reconnectOnTimeout": true,
-        "reconnectTimeout": "2000",
-        "parallelUnitIdsAllowed": true,
+        "id": "21ef9f4e2ece390b",
+        "type": "modbus-getter",
+        "z": "436938ed0226b400",
+        "name": "Read1b",
+        "showStatusActivities": false,
         "showErrors": true,
         "showWarnings": true,
-        "showLogs": true
+        "logIOActivities": false,
+        "unitid": "11",
+        "dataType": "HoldingRegister",
+        "adr": "18",
+        "quantity": "14",
+        "server": "03d24f212f3a0679",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 480,
+        "y": 880,
+        "wires": [
+            [
+                "59151a69276feef8"
+            ],
+            []
+        ]
     },
     {
-        "id": "6bb6fa456075eb32",
-        "type": "modbus-client",
-        "name": "Gefran2",
-        "clienttype": "tcp",
-        "bufferCommands": true,
-        "stateLogEnabled": false,
-        "queueLogEnabled": false,
-        "failureLogEnabled": true,
-        "tcpHost": "192.168.2.12",
-        "tcpPort": "502",
-        "tcpType": "DEFAULT",
-        "serialPort": "/dev/ttyUSB",
-        "serialType": "RTU-BUFFERD",
-        "serialBaudrate": "9600",
-        "serialDatabits": "8",
-        "serialStopbits": "1",
-        "serialParity": "none",
-        "serialConnectionDelay": "100",
-        "serialAsciiResponseStartDelimiter": "0x3A",
-        "unit_id": "12",
-        "commandDelay": "1",
-        "clientTimeout": "1000",
-        "reconnectOnTimeout": true,
-        "reconnectTimeout": "2000",
-        "parallelUnitIdsAllowed": true,
-        "showErrors": false,
-        "showWarnings": true,
-        "showLogs": true
-    },
-    {
-        "id": "03d24f212f3a0679",
-        "type": "modbus-client",
-        "name": "Gefran1",
-        "clienttype": "tcp",
-        "bufferCommands": true,
-        "stateLogEnabled": false,
-        "queueLogEnabled": false,
-        "failureLogEnabled": true,
-        "tcpHost": "192.168.2.11",
-        "tcpPort": "502",
-        "tcpType": "DEFAULT",
-        "serialPort": "/dev/ttyUSB",
-        "serialType": "RTU-BUFFERD",
-        "serialBaudrate": "9600",
-        "serialDatabits": "8",
-        "serialStopbits": "1",
-        "serialParity": "none",
-        "serialConnectionDelay": "100",
-        "serialAsciiResponseStartDelimiter": "0x3A",
-        "unit_id": 11,
-        "commandDelay": 1,
-        "clientTimeout": 1000,
-        "reconnectOnTimeout": true,
-        "reconnectTimeout": 2000,
-        "parallelUnitIdsAllowed": true,
+        "id": "8a39b70a7a2f7fa1",
+        "type": "modbus-getter",
+        "z": "436938ed0226b400",
+        "name": "Read2b",
+        "showStatusActivities": false,
         "showErrors": true,
         "showWarnings": true,
-        "showLogs": true
+        "logIOActivities": false,
+        "unitid": "12",
+        "dataType": "HoldingRegister",
+        "adr": "18",
+        "quantity": "14",
+        "server": "6bb6fa456075eb32",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 480,
+        "y": 960,
+        "wires": [
+            [
+                "59151a69276feef8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "c6b253b993aefb30",
+        "type": "modbus-getter",
+        "z": "436938ed0226b400",
+        "name": "Read3b",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "13",
+        "dataType": "HoldingRegister",
+        "adr": "18",
+        "quantity": "14",
+        "server": "b826498401685724",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 480,
+        "y": 1040,
+        "wires": [
+            [
+                "59151a69276feef8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "73683e0f1723d444",
+        "type": "inject",
+        "z": "436938ed0226b400",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1.1",
+        "topic": "requestB",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 980,
+        "wires": [
+            [
+                "21ef9f4e2ece390b",
+                "8a39b70a7a2f7fa1",
+                "c6b253b993aefb30"
+            ]
+        ]
+    },
+    {
+        "id": "f9e9e51f6ff5bfab",
+        "type": "plc-read-variables",
+        "z": "b670c08ff0955fc3",
+        "plc_connector": "b17d34f713647319",
+        "variables": "Arp.Plc.Eclr/LoadCell",
+        "searchbar": "",
+        "x": 317.89581298828125,
+        "y": 162.90277099609375,
+        "wires": [
+            [
+                "58350ca61e2e6967",
+                "627ef1f307b8f95b"
+            ]
+        ]
+    },
+    {
+        "id": "34eea984295af8d9",
+        "type": "inject",
+        "z": "b670c08ff0955fc3",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 97.89581298828125,
+        "y": 162.90277099609375,
+        "wires": [
+            [
+                "f9e9e51f6ff5bfab"
+            ]
+        ]
+    },
+    {
+        "id": "278f34b1330ddbe3",
+        "type": "mqtt out",
+        "z": "b670c08ff0955fc3",
+        "name": "",
+        "topic": "Pull01/Stream01/Force",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "770f0e200820a018",
+        "x": 780,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "196fb00289803cc7",
+        "type": "comment",
+        "z": "b670c08ff0955fc3",
+        "name": "Read Force Analog",
+        "info": "",
+        "x": 317.89581298828125,
+        "y": 122.90277099609375,
+        "wires": []
+    },
+    {
+        "id": "6b3e4a9f998ebc7b",
+        "type": "debug",
+        "z": "b670c08ff0955fc3",
+        "name": "debug 8",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "58350ca61e2e6967",
+        "type": "function",
+        "z": "b670c08ff0955fc3",
+        "name": "function 1",
+        "func": "msg.payload = msg.payload.variables[0].value;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 160,
+        "wires": [
+            [
+                "6b3e4a9f998ebc7b",
+                "278f34b1330ddbe3"
+            ]
+        ]
+    },
+    {
+        "id": "627ef1f307b8f95b",
+        "type": "debug",
+        "z": "b670c08ff0955fc3",
+        "name": "debug 9",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 80,
+        "wires": []
     }
 ]
