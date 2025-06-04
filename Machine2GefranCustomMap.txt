@@ -1,0 +1,46 @@
+Read Requests
+2 requests x 18/request / 4 zones = 9 / zone
+200	Zone1.PV
+201	Zone1.SPA
+202	Zone1.Ou.P (Output)
+203	Zone1.ALSTATE (Alarms)
+204	Zone1.I.1on (Amps)
+205	Zone1.STATUSWORD (Enable and Self-Tune)
+206	Unused
+207	Unused
+208	Unused
+209	Zone2.PV
+...
+218	Zone3.PV
+...
+227	Zone4.PV
+...
+235	Unused
+
+Write Requests
+1 request x 18/request / 4 zones = 4 / zone
+236	Zone1.SP
+237	Zone1.STATUSWORD (Enable and Self-Tune)
+238	Unused
+239	Unused
+240	Zone2.SP
+...
+244	Zone3.SP
+...
+248	Zone4.SP
+...
+251	Unused
+
+PID Requests
+1 request x 18/request / 4 zones = 4 / zone
+252	Zone1.h.Pb (Proportional Gain)
+253	Zone1.h.It (Integral Gain)
+254	Zone1.h.dt (Derivative Gain)
+255	Zone1.Ct.1 (Cycle Time)
+256	Zone2.h.Pb
+...
+260	Zone3.h.Pb
+...
+264	Zone4.h.Pb
+...
+267	Zone4.Ct.1
