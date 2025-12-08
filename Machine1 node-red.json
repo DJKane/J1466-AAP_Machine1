@@ -16,44 +16,70 @@
         "env": []
     },
     {
-        "id": "7e5571bfecc57c9e",
-        "type": "group",
-        "z": "f4c312cdd0835c2f",
-        "name": "InfluxDB",
-        "style": {
-            "label": true,
-            "color": "#ffC000",
-            "stroke": "#ffC000"
-        },
-        "nodes": [
-            "0c8e18e0cc5d478b",
-            "dba524cdbe9f9d6c",
-            "885b60547af607cb",
-            "cd5ac2e3a59a6264"
-        ],
-        "x": 674,
-        "y": 59,
-        "w": 692,
-        "h": 122
+        "id": "35b16d5ecdf07d35",
+        "type": "tab",
+        "label": "PID",
+        "disabled": false,
+        "info": "",
+        "env": []
     },
     {
-        "id": "9542b94ded293103",
-        "type": "group",
-        "z": "f4c312cdd0835c2f",
-        "name": "Debug",
-        "style": {
-            "label": true
-        },
-        "nodes": [
-            "281740aaf354c17a",
-            "167818fa45b87899",
-            "d6783647ba9d8d5d",
-            "c52a499ed5c2311b"
+        "id": "17a988668c938554",
+        "type": "subflow",
+        "name": "ZonePID",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "706c2eaa29a64752"
+                    },
+                    {
+                        "id": "736ffd4dde8f80ec"
+                    }
+                ]
+            }
         ],
-        "x": 674,
-        "y": 319,
-        "w": 692,
-        "h": 282
+        "out": [],
+        "env": [
+            {
+                "name": "ui-group",
+                "type": "ui-group",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "en-US": "Zone UI Group"
+                    },
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "gefran",
+                "type": "modbus-client",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "en-US": "Gefran"
+                    },
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "zoneNumber",
+                "type": "num",
+                "value": "0"
+            },
+            {
+                "name": "address",
+                "type": "num",
+                "value": ""
+            }
+        ],
+        "meta": {},
+        "color": "#DDAA99"
     },
     {
         "id": "7d708220e7352df6",
@@ -86,21 +112,6 @@
         "auth_required": "true"
     },
     {
-        "id": "3d4a2a7d7377b0aa",
-        "type": "influxdb",
-        "hostname": "127.0.0.1",
-        "port": "8086",
-        "protocol": "http",
-        "database": "database",
-        "name": "influxdb",
-        "usetls": false,
-        "tls": "",
-        "influxdbVersion": "2.0",
-        "url": "https://192.168.3.20:58086/",
-        "timeout": "",
-        "rejectUnauthorized": false
-    },
-    {
         "id": "b826498401685724",
         "type": "modbus-client",
         "name": "Gefran3",
@@ -120,11 +131,11 @@
         "serialParity": "none",
         "serialConnectionDelay": "100",
         "serialAsciiResponseStartDelimiter": "0x3A",
-        "unit_id": "3",
-        "commandDelay": "1",
-        "clientTimeout": "1000",
+        "unit_id": 3,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
         "reconnectOnTimeout": true,
-        "reconnectTimeout": "2000",
+        "reconnectTimeout": 2000,
         "parallelUnitIdsAllowed": true,
         "showErrors": true,
         "showWarnings": true,
@@ -150,11 +161,11 @@
         "serialParity": "none",
         "serialConnectionDelay": "100",
         "serialAsciiResponseStartDelimiter": "0x3A",
-        "unit_id": "2",
-        "commandDelay": "1",
-        "clientTimeout": "1000",
+        "unit_id": 2,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
         "reconnectOnTimeout": true,
-        "reconnectTimeout": "2000",
+        "reconnectTimeout": 2000,
         "parallelUnitIdsAllowed": true,
         "showErrors": false,
         "showWarnings": true,
@@ -180,11 +191,11 @@
         "serialParity": "none",
         "serialConnectionDelay": "100",
         "serialAsciiResponseStartDelimiter": "0x3A",
-        "unit_id": "1",
-        "commandDelay": "1",
-        "clientTimeout": "1000",
+        "unit_id": 1,
+        "commandDelay": 1,
+        "clientTimeout": 1000,
         "reconnectOnTimeout": true,
-        "reconnectTimeout": "2000",
+        "reconnectTimeout": 2000,
         "parallelUnitIdsAllowed": true,
         "showErrors": true,
         "showWarnings": true,
@@ -222,6 +233,624 @@
         "sessionExpiry": ""
     },
     {
+        "id": "d26ae779cd42b188",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "CentralPlcNext",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://192.168.3.10:58086",
+        "timeout": "10",
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "61844bc14615df73",
+        "type": "ui-group",
+        "name": "Group 1",
+        "page": "21ad89b103b9db43",
+        "width": "12",
+        "height": "1",
+        "order": 1,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "14a60ac4ede7757a",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "21ad89b103b9db43",
+        "type": "ui-page",
+        "name": "Stream 1",
+        "ui": "0f8ebb1347a3901d",
+        "path": "/left",
+        "icon": "arrow-up-left-bold",
+        "layout": "grid",
+        "theme": "14a60ac4ede7757a",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "0f8ebb1347a3901d",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": true
+    },
+    {
+        "id": "97b2e8a85171b3f8",
+        "type": "ui-group",
+        "name": "Zone 1",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "8b7058ce384d10a7",
+        "type": "ui-group",
+        "name": "Zone 2",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "934364c959e9bb43",
+        "type": "ui-group",
+        "name": "Zone 3",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "e54e26312981cfb6",
+        "type": "ui-group",
+        "name": "Zone 4",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 5,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "36160ea804b58025",
+        "type": "ui-group",
+        "name": "Zone 5",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 6,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "9fc1a33aafd4b025",
+        "type": "ui-group",
+        "name": "Zone 6",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 7,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "953586ab3798305d",
+        "type": "ui-group",
+        "name": "Zone 7",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 8,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "de0d9821fd686e97",
+        "type": "ui-group",
+        "name": "Zone 8",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 9,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "67b9eb49f9e9bda0",
+        "type": "ui-group",
+        "name": "Zone 9",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 10,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ccae82d470e59db0",
+        "type": "ui-group",
+        "name": "Zone 10",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 11,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "dcb46e110cb2b7e9",
+        "type": "ui-group",
+        "name": "Zone 11",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 12,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "5765e6a6197a13a4",
+        "type": "ui-group",
+        "name": "Zone 12",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 13,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "706c2eaa29a64752",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Split Values",
+        "func": "return [\n    {payload : msg.p},\n    {payload : msg.i},\n    {payload : msg.d},\n    {payload : msg.t},\n    ];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "5dba53281c2ed83a"
+            ],
+            [
+                "4ba5cc9e62c6c178"
+            ],
+            [
+                "3d84ad479d83d915"
+            ],
+            [
+                "90e911e2ab3eaf70"
+            ]
+        ]
+    },
+    {
+        "id": "7ef158487665bd98",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Store",
+        "func": "flow.set(`${env.get(\"zoneNumber\")}P`, msg.payload);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "1df00faa7ed2f0ba",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Store",
+        "func": "flow.set(`${env.get(\"zoneNumber\")}I`, msg.payload);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "c1cc073a29dae67c",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Store",
+        "func": "flow.set(`${env.get(\"zoneNumber\")}D`, msg.payload);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "c822af1c209c1a46",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Store",
+        "func": "flow.set(`${env.get(\"zoneNumber\")}T`, msg.payload);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "addef47733fb77fb",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Recall",
+        "func": "msg.payload = [\n    flow.get(`${env.get(\"zoneNumber\")}P`) * 10,\n    flow.get(`${env.get(\"zoneNumber\")}I`) * 100,\n    flow.get(`${env.get(\"zoneNumber\")}D`) * 100,\n    flow.get(`${env.get(\"zoneNumber\")}T`),\n    ];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 220,
+        "wires": [
+            [
+                "63b12672611e14eb"
+            ]
+        ]
+    },
+    {
+        "id": "63b12672611e14eb",
+        "type": "modbus-write",
+        "z": "17a988668c938554",
+        "name": "WriteGefran",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "unitid": "",
+        "dataType": "MHoldingRegisters",
+        "adr": "${address}",
+        "quantity": "4",
+        "server": "${gefran}",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 790,
+        "y": 220,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "736ffd4dde8f80ec",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Detect Changes",
+        "func": "var z = env.get(\"zoneNumber\");\nvar lastP = flow.get(`${z}Pl`);\nvar lastI = flow.get(`${z}Il`);\nvar lastD = flow.get(`${z}Dl`);\nvar lastT = flow.get(`${z}Tl`);\nvar wasEnabled = flow.get(`${z}e`);\nvar isEnabled = global.get(`${z}Enabled`);\nflow.set(`${z}e`, isEnabled);\n\n//check if we're running\nif (!isEnabled)\n    return null;\n\n//skip change check on rising edge of enable to always record the PID values on start\nif (wasEnabled)\n    //check if there are changes\n    if (lastP ==  msg.p && lastI ==  msg.i && lastD ==  msg.d && lastT ==  msg.t)\n        return null;\n    \nvar m = global.get(\"machineNumber\");\nvar stream = 2*m - 1;\nif (m > 1 && z <= 12)\n    stream -= 1;\n   \nvar test = global.get(`Test`);\n   \nmsg.payload = [\n    {\n        PID_Pb:msg.p,\n        PID_It:msg.i,\n        PID_dt:msg.d,\n        PID_Ct:msg.t\n    },\n    {\n        machine: m,\n        stream: stream,\n        zone: (z-1)%12+1,\n        plug: z,\n        test: test,\n    },\n];\n\nflow.set(`${z}Pl`, msg.p);\nflow.set(`${z}Il`, msg.i);\nflow.set(`${z}Dl`, msg.d);\nflow.set(`${z}Tl`, msg.t);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 300,
+        "wires": [
+            [
+                "bda0ca8a7992232b"
+            ]
+        ]
+    },
+    {
+        "id": "bda0ca8a7992232b",
+        "type": "influxdb out",
+        "z": "17a988668c938554",
+        "influxdb": "d26ae779cd42b188",
+        "name": "",
+        "measurement": "heater_data",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "A2P",
+        "bucket": "Pultrusion",
+        "x": 520,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5dba53281c2ed83a",
+        "type": "ui-number-input",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "P",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "999.9",
+        "step": "0.1",
+        "tooltip": "",
+        "passthru": true,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "stacked",
+        "x": 430,
+        "y": 60,
+        "wires": [
+            [
+                "7ef158487665bd98"
+            ]
+        ]
+    },
+    {
+        "id": "4ba5cc9e62c6c178",
+        "type": "ui-number-input",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "I",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "99.99",
+        "step": "0.01",
+        "tooltip": "",
+        "passthru": true,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "stacked",
+        "x": 430,
+        "y": 100,
+        "wires": [
+            [
+                "1df00faa7ed2f0ba"
+            ]
+        ]
+    },
+    {
+        "id": "3d84ad479d83d915",
+        "type": "ui-number-input",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "D",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "99.99",
+        "step": "0.01",
+        "tooltip": "",
+        "passthru": true,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "stacked",
+        "x": 430,
+        "y": 140,
+        "wires": [
+            [
+                "c1cc073a29dae67c"
+            ]
+        ]
+    },
+    {
+        "id": "90e911e2ab3eaf70",
+        "type": "ui-number-input",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "T",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "200",
+        "step": "1",
+        "tooltip": "",
+        "passthru": true,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "stacked",
+        "x": 430,
+        "y": 180,
+        "wires": [
+            [
+                "c822af1c209c1a46"
+            ]
+        ]
+    },
+    {
+        "id": "38950161e31bc57d",
+        "type": "ui-button",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "Write",
+        "order": 0,
+        "width": "1",
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 430,
+        "y": 220,
+        "wires": [
+            [
+                "addef47733fb77fb"
+            ]
+        ]
+    },
+    {
         "id": "512a2afaca550d7c",
         "type": "inject",
         "z": "f4c312cdd0835c2f",
@@ -253,16 +882,13 @@
         "z": "f4c312cdd0835c2f",
         "g": "7d708220e7352df6",
         "plc_connector": "b17d34f713647319",
-        "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/Enable",
+        "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/Test",
         "searchbar": "",
         "x": 390,
         "y": 160,
         "wires": [
             [
-                "0c8e18e0cc5d478b",
-                "dd8fb22f75a1be15",
-                "4bae2a6a2c544449",
-                "b3a0d9050b3bfa4b"
+                "b314ab68ffa53120"
             ]
         ]
     },
@@ -277,76 +903,6 @@
         "wires": []
     },
     {
-        "id": "0c8e18e0cc5d478b",
-        "type": "function",
-        "z": "f4c312cdd0835c2f",
-        "g": "7e5571bfecc57c9e",
-        "name": "InfluxDB formatter",
-        "func": "// Init data array\nvar zones = msg.payload.variables[0].value\nvar data = []\n\ntry {\n    var datetime = Date.now();\n    for (var elem of zones){\n        \n        temperatureDataPoint = {\n            measurement:'temperature',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                PV:elem.PV,\n                SP:elem.SPA,\n            },\n            strTimestamp: datetime,\n        };\n        \n        enabledDataPoint = {\n            measurement:'enabled',\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Enabled,\n            },\n            strTimestamp: datetime,\n        };\n        \n        outputDataPoint = {\n            measurement:\"output\",\n            tags:{\n                Zone:elem.Id,\n            },\n            fields:{\n                value:elem.Output,\n            },\n            strTimestamp: datetime,\n        };\n        \n        // Insert data points into data array\n        data.push(temperatureDataPoint);\n        data.push(enabledDataPoint);\n        data.push(outputDataPoint);\n    }\n    enableDataPoint = {\n        measurement:'enable',\n        fields:{\n            value:msg.payload.variables[1].value,\n        },\n        strTimestamp: datetime,\n    };\n    data.push(enableDataPoint);\n} catch (e) {\n    node.error(e);\n}\n\n// Hand over payload\nmsg.payload =  data\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": "",
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 790,
-        "y": 140,
-        "wires": [
-            [
-                "dba524cdbe9f9d6c",
-                "c52a499ed5c2311b"
-            ]
-        ]
-    },
-    {
-        "id": "dba524cdbe9f9d6c",
-        "type": "influxdb batch",
-        "z": "f4c312cdd0835c2f",
-        "g": "7e5571bfecc57c9e",
-        "influxdb": "3d4a2a7d7377b0aa",
-        "precision": "",
-        "retentionPolicy": "",
-        "name": "InfluxDB Batch",
-        "database": "database",
-        "precisionV18FluxV20": "ms",
-        "retentionPolicyV18Flux": "",
-        "org": "keg",
-        "bucket": "AAP",
-        "x": 1120,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "281740aaf354c17a",
-        "type": "debug",
-        "z": "f4c312cdd0835c2f",
-        "g": "9542b94ded293103",
-        "name": "debug 2",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1220,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "885b60547af607cb",
-        "type": "comment",
-        "z": "f4c312cdd0835c2f",
-        "d": true,
-        "g": "7e5571bfecc57c9e",
-        "name": "Configuration of InfluxDB Parameters",
-        "info": "",
-        "x": 1190,
-        "y": 100,
-        "wires": []
-    },
-    {
         "id": "a8c69e3fc9a7aed9",
         "type": "comment",
         "z": "f4c312cdd0835c2f",
@@ -355,30 +911,6 @@
         "info": "",
         "x": 450,
         "y": 120,
-        "wires": []
-    },
-    {
-        "id": "cd5ac2e3a59a6264",
-        "type": "comment",
-        "z": "f4c312cdd0835c2f",
-        "d": true,
-        "g": "7e5571bfecc57c9e",
-        "name": "Activate Node to use InfluxDB",
-        "info": "",
-        "x": 820,
-        "y": 100,
-        "wires": []
-    },
-    {
-        "id": "167818fa45b87899",
-        "type": "comment",
-        "z": "f4c312cdd0835c2f",
-        "d": true,
-        "g": "9542b94ded293103",
-        "name": "Activate for Debug",
-        "info": "",
-        "x": 790,
-        "y": 520,
         "wires": []
     },
     {
@@ -391,27 +923,6 @@
         "x": 160,
         "y": 120,
         "wires": []
-    },
-    {
-        "id": "dd8fb22f75a1be15",
-        "type": "function",
-        "z": "f4c312cdd0835c2f",
-        "name": "Gefran3 Formatter",
-        "func": "var zones = msg.payload.variables[0].value;\nvar enable = msg.payload.variables[1].value;\nvar lastValues = global.get(\"Write3Vals\");\nvar anyChanges = false;\n\nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(clampTemp(zones[8+z].SP));\n    msg.payload[z*4+1] = makeWord(((enable && zones[8+z].Enable)?0:8) + (zones[8+z].SelfTune?4:0));\n    msg.payload[z*4+2] = makeWord(clampTemp(0));\n    msg.payload[z*4+3] = makeWord(clampTemp(0));\n}\n\nif (Array.isArray(lastValues))\n{\n    for (var i = 0; i < 16; i++)\n    {\n        if (msg.payload[i] != lastValues[i])\n        {\n            anyChanges = true;\n            break;\n        }\n    }\n}\nelse\n{\n    anyChanges = true;\n}\n\nif (anyChanges)\n{\n    global.set(\"Write3Vals\", msg.payload);\n    return msg;\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 770,
-        "y": 340,
-        "wires": [
-            [
-                "c706f8950c5e392d",
-                "281740aaf354c17a"
-            ]
-        ]
     },
     {
         "id": "646a6c9650517f78",
@@ -427,7 +938,7 @@
                 "vt": "str"
             }
         ],
-        "repeat": "2",
+        "repeat": "1",
         "crontab": "",
         "once": true,
         "onceDelay": 0.1,
@@ -435,7 +946,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 900,
+        "y": 440,
         "wires": [
             [
                 "fa49c4ef6d985853",
@@ -451,7 +962,7 @@
         "name": "Max 18 registers",
         "info": "Max 18 registers per request",
         "x": 480,
-        "y": 800,
+        "y": 340,
         "wires": []
     },
     {
@@ -463,70 +974,9 @@
         "var_list": "{\"items\":[]}",
         "searchbar": "Arp.Plc.Eclr/Zone[9].PV",
         "x": 930,
-        "y": 940,
+        "y": 480,
         "wires": [
-            [
-                "d6783647ba9d8d5d"
-            ]
-        ]
-    },
-    {
-        "id": "d6783647ba9d8d5d",
-        "type": "debug",
-        "z": "f4c312cdd0835c2f",
-        "g": "9542b94ded293103",
-        "name": "debug 3",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1220,
-        "y": 560,
-        "wires": []
-    },
-    {
-        "id": "4bae2a6a2c544449",
-        "type": "function",
-        "z": "f4c312cdd0835c2f",
-        "name": "Gefran2 Formatter",
-        "func": "var zones = msg.payload.variables[0].value;\nvar enable = msg.payload.variables[1].value;\nvar lastValues = global.get(\"Write2Vals\");\nvar anyChanges = false;\n\nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(clampTemp(zones[4+z].SP));\n    msg.payload[z*4+1] = makeWord(((enable && zones[4+z].Enable)?0:8) + (zones[4+z].SelfTune?4:0));\n    msg.payload[z*4+2] = makeWord(clampTemp(0));\n    msg.payload[z*4+3] = makeWord(clampTemp(0));\n}\n\n\nif (Array.isArray(lastValues))\n{\n    for (var i = 0; i < 16; i++)\n    {\n        if (msg.payload[i] != lastValues[i])\n        {\n            anyChanges = true;\n            break;\n        }\n    }\n}\nelse\n{\n    anyChanges = true;\n}\n\nif (anyChanges)\n{\n    global.set(\"Write2Vals\", msg.payload);\n    return msg;\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 770,
-        "y": 300,
-        "wires": [
-            [
-                "91cf7427ace2e7cd",
-                "281740aaf354c17a"
-            ]
-        ]
-    },
-    {
-        "id": "b3a0d9050b3bfa4b",
-        "type": "function",
-        "z": "f4c312cdd0835c2f",
-        "name": "Gefran1 Formatter",
-        "func": "var zones = msg.payload.variables[0].value;\nvar enable = msg.payload.variables[1].value;\nvar lastValues = global.get(\"Write1Vals\");\nvar anyChanges = false;\n\nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nmsg.payload = [\n    0,\n    1,\n    2,\n    3,\n    4,\n    5,\n    6,\n    7,\n    8,\n    9,\n    10,\n    11,\n    12,\n    13,\n    14,\n    15,\n]\n\nfor (var z = 0; z < 4; z++)\n{\n    msg.payload[z*4+0] = makeWord(clampTemp(zones[z].SP));\n    msg.payload[z*4+1] = makeWord(((enable && zones[z].Enable)?0:8) + (zones[z].SelfTune?4:0));\n    msg.payload[z*4+2] = makeWord(clampTemp(0));\n    msg.payload[z*4+3] = makeWord(clampTemp(0));\n}\n\n\nif (Array.isArray(lastValues))\n{\n    for (var i = 0; i < 16; i++)\n    {\n        if (msg.payload[i] != lastValues[i])\n        {\n            anyChanges = true;\n            break;\n        }\n    }\n}\nelse\n{\n    anyChanges = true;\n}\n\nif (anyChanges)\n{\n    global.set(\"Write1Vals\", msg.payload);\n    return msg;\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 770,
-        "y": 260,
-        "wires": [
-            [
-                "74544a2632270981",
-                "281740aaf354c17a"
-            ]
+            []
         ]
     },
     {
@@ -534,18 +984,21 @@
         "type": "function",
         "z": "f4c312cdd0835c2f",
         "name": "PLCnext Formatter",
-        "func": "values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"1\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"2\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"3\")\n    firstZone = 9;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nfor (var z=0; z<4; z++)\n{\n    if (msg.topic == \"requestA\")\n    {\n        msg.payload.variables[z*4+0] = makeVariable(z,\"PV\",values[z*4+0]);\n        msg.payload.variables[z*4+1] = makeVariable(z,\"SPA\",values[z*4+1]);\n        msg.payload.variables[z*4+2] = makeVariable(z,\"Output\",values[z*4+2]*0.1);\n        msg.payload.variables[z*4+3] = makeVariable(z,\"Alarms\",values[z*4+3]);\n    }\n    else if (msg.topic == \"requestB\")\n    {\n        msg.payload.variables[z] = makeVariable(z, \"Amps\", values[z*3+0]*0.1);\n    }\n}\n\nreturn msg;",
-        "outputs": 1,
+        "func": "values = msg.payload;\nmsg.payload = {};\nmsg.payload.variables = [];\n\nvar test = global.get(`Test`);\nvar m = global.get(`machineNumber`);\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"1\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"2\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"3\")\n    firstZone = 9;\n    \nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nvar stream = m*2-1;\nif (m > 1 && firstZone < 13)\n    stream -= 1;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar influxMsg = {tags:{\n    machine: m,\n    stream: stream,\n    zone: firstZone,\n}}\noutputMsg = {};\noutputMsg.payload = [];\nvar v = 0;\nfor (var z=0; z<2; z++)\n{\n    if (global.get(`${z + firstZone}Enabled`))\n        outputMsg.payload[z] = [\n            {\n                duty_pct:values[z*9+2]*0.1,\n            },\n            {\n                machine: m,\n                stream: stream,\n                zone: (z + firstZone - 1)%12 + 1,\n                plug: z + firstZone,\n                test: z<13 ? testR : testL,\n            },\n        ];\n    flow.set(`${z+firstZone}PV`, values[z*9]);\n    flow.set(`${z+firstZone}Output`, values[z*9+2]*0.1);\n    flow.set(`${z+firstZone}Amps`, values[z*9+4]*0.1);\n    msg.payload.variables[v++] = makeVariable(z,\"PV\",values[z*9+0]);\n    msg.payload.variables[v++] = makeVariable(z,\"SPA\",values[z*9+1]);\n    msg.payload.variables[v++] = makeVariable(z,\"Output\",values[z*9+2]*0.1);\n    msg.payload.variables[v++] = makeVariable(z,\"Alarms\",values[z*9+3]);\n    msg.payload.variables[v++] = makeVariable(z,\"Amps\",values[z*9+4]*0.1);\n    msg.payload.variables[v++] = makeVariable(z,\"Enabled\", (values[z*9+5] & 8) == 0);\n    msg.payload.variables[v++] = makeVariable(z,\"SelfTuning\", (values[z*9+5] & 4) > 0);\n}\n\nreturn [msg,outputMsg];",
+        "outputs": 2,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 710,
-        "y": 940,
+        "y": 480,
         "wires": [
             [
                 "e5d2b6aa3223fb6c"
+            ],
+            [
+                "ee202aa932f38ac1"
             ]
         ]
     },
@@ -571,7 +1024,7 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 480,
-        "y": 1000,
+        "y": 540,
         "wires": [
             [
                 "5657e8d6b72dd7c0"
@@ -601,7 +1054,7 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 480,
-        "y": 920,
+        "y": 460,
         "wires": [
             [
                 "5657e8d6b72dd7c0"
@@ -631,7 +1084,7 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 480,
-        "y": 840,
+        "y": 380,
         "wires": [
             [
                 "5657e8d6b72dd7c0"
@@ -649,7 +1102,7 @@
         "showWarnings": true,
         "unitid": "3",
         "dataType": "MHoldingRegisters",
-        "adr": "32",
+        "adr": "36",
         "quantity": "16",
         "server": "b826498401685724",
         "emptyMsgOnFail": false,
@@ -657,11 +1110,9 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 950,
-        "y": 340,
+        "y": 280,
         "wires": [
-            [
-                "281740aaf354c17a"
-            ],
+            [],
             []
         ]
     },
@@ -675,7 +1126,7 @@
         "showWarnings": true,
         "unitid": "2",
         "dataType": "MHoldingRegisters",
-        "adr": "32",
+        "adr": "36",
         "quantity": "16",
         "server": "6bb6fa456075eb32",
         "emptyMsgOnFail": false,
@@ -683,11 +1134,9 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 950,
-        "y": 300,
+        "y": 240,
         "wires": [
-            [
-                "281740aaf354c17a"
-            ],
+            [],
             []
         ]
     },
@@ -701,7 +1150,7 @@
         "showWarnings": true,
         "unitid": "1",
         "dataType": "MHoldingRegisters",
-        "adr": "32",
+        "adr": "36",
         "quantity": "16",
         "server": "03d24f212f3a0679",
         "emptyMsgOnFail": false,
@@ -709,30 +1158,11 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 950,
-        "y": 260,
+        "y": 200,
         "wires": [
-            [
-                "281740aaf354c17a"
-            ],
+            [],
             []
         ]
-    },
-    {
-        "id": "c52a499ed5c2311b",
-        "type": "debug",
-        "z": "f4c312cdd0835c2f",
-        "g": "9542b94ded293103",
-        "name": "debug 4",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1260,
-        "y": 360,
-        "wires": []
     },
     {
         "id": "c6d96e9a123c05bb",
@@ -746,7 +1176,7 @@
         "unitid": "1",
         "dataType": "HoldingRegister",
         "adr": "18",
-        "quantity": "14",
+        "quantity": "18",
         "server": "03d24f212f3a0679",
         "useIOFile": false,
         "ioFile": "",
@@ -756,7 +1186,7 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 480,
-        "y": 880,
+        "y": 420,
         "wires": [
             [
                 "5657e8d6b72dd7c0"
@@ -776,7 +1206,7 @@
         "unitid": "2",
         "dataType": "HoldingRegister",
         "adr": "18",
-        "quantity": "14",
+        "quantity": "18",
         "server": "6bb6fa456075eb32",
         "useIOFile": false,
         "ioFile": "",
@@ -786,7 +1216,7 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 480,
-        "y": 960,
+        "y": 500,
         "wires": [
             [
                 "5657e8d6b72dd7c0"
@@ -806,7 +1236,7 @@
         "unitid": "3",
         "dataType": "HoldingRegister",
         "adr": "18",
-        "quantity": "14",
+        "quantity": "18",
         "server": "b826498401685724",
         "useIOFile": false,
         "ioFile": "",
@@ -816,7 +1246,7 @@
         "delayOnStart": false,
         "startDelayTime": "",
         "x": 480,
-        "y": 1040,
+        "y": 580,
         "wires": [
             [
                 "5657e8d6b72dd7c0"
@@ -838,20 +1268,204 @@
                 "vt": "str"
             }
         ],
-        "repeat": "2",
+        "repeat": "1",
         "crontab": "",
         "once": true,
-        "onceDelay": "1.1",
+        "onceDelay": "0.6",
         "topic": "requestB",
         "payload": "",
         "payloadType": "date",
         "x": 120,
-        "y": 980,
+        "y": 520,
         "wires": [
             [
                 "c6d96e9a123c05bb",
                 "411c0ef389aab0fd",
                 "1be20b4b1ad549d9"
+            ]
+        ]
+    },
+    {
+        "id": "a1f3e9f69223bbb9",
+        "type": "inject",
+        "z": "f4c312cdd0835c2f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "30",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 510,
+        "y": 740,
+        "wires": [
+            [
+                "f71dab88ed1ba6be"
+            ]
+        ]
+    },
+    {
+        "id": "f71dab88ed1ba6be",
+        "type": "function",
+        "z": "f4c312cdd0835c2f",
+        "name": "temp & amps",
+        "func": "msg.payload = [];\n\nvar m = global.get(`machineNumber`);\nvar stream = m*2-1;\nif (m == 1)\n    stream = 2;\n\nvar sample = null;\nvar test = global.get(`Test`);\nif (test)\n    sample = {\n        payload:{\n            timestamp: Date.now()\n        },\n        filename:\"/data/stream1.csv\",\n        columns:\"timestamp\",\n    };\n\nvar j = 0;\nfor(var i = 1; i <= 24; i++)\n{\n    if (global.get(`${i}Enabled`))\n    {\n        msg.payload[j++] = [\n            {\n                temperature_F: flow.get(`${i}PV`),\n                current_A: flow.get(`${i}Amps`),\n            },\n            {\n                machine: global.get(`machineNumber`),\n                stream: i<13 ? stream - 1 : stream,\n                zone: (i-1)%12+1,\n                plug: i,\n                test: test,\n            },\n        ]\n        if (test) {\n            sample.columns += `,temp${i},duty${i},amps${i}`;\n            sample.payload[`temp${i}`] = flow.get(`${i}PV`);\n            sample.payload[`duty${i}`] = flow.get(`${i}Output`);\n            sample.payload[`amps${i}`] = flow.get(`${i}Amps`);\n        }\n    }\n}\nreturn [ msg, sample ];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 740,
+        "wires": [
+            [
+                "ee202aa932f38ac1"
+            ],
+            [
+                "60c61016f02e73c1"
+            ]
+        ]
+    },
+    {
+        "id": "60c61016f02e73c1",
+        "type": "csv",
+        "z": "f4c312cdd0835c2f",
+        "name": "",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\r\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": true,
+        "include_null_values": true,
+        "x": 890,
+        "y": 740,
+        "wires": [
+            [
+                "400764f1cd4d1ddc"
+            ]
+        ]
+    },
+    {
+        "id": "400764f1cd4d1ddc",
+        "type": "file",
+        "z": "f4c312cdd0835c2f",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1080,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ee202aa932f38ac1",
+        "type": "influxdb out",
+        "z": "f4c312cdd0835c2f",
+        "influxdb": "d26ae779cd42b188",
+        "name": "",
+        "measurement": "heater_data",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "A2P",
+        "bucket": "Pulltrusion",
+        "x": 1000,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "b314ab68ffa53120",
+        "type": "function",
+        "z": "f4c312cdd0835c2f",
+        "name": "Gefran Formatter",
+        "func": "var zones = msg.payload.variables[0].value;\nglobal.set(`Test`, msg.payload.variables[1].value === true);\nvar lastValues = [];\nvar msgs = [{},{},{}];\nvar anyChanges = [false,false,false];\n\n\nfor(var i = 0; i < 12; i++)\n    global.set(`${i+1}Enabled`, zones[i].Enabled);\n\nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nfor (var unit = 0; unit < 3; unit++)\n{\n    lastValues[unit] = global.get(`Write${unit}Vals`);\n\n    msgs[unit] = {\n        payload: [\n            0,\n            1,\n            2,\n            3,\n            4,\n            5,\n            6,\n            7,\n            8,\n            9,\n            10,\n            11,\n            12,\n            13,\n            14,\n            15,\n        ]\n    };\n\n    for (var z = 0; z < 4; z++)\n    {\n        msgs[unit].payload[z*4+0] = makeWord(clampTemp(zones[4*unit+z].SP));\n        msgs[unit].payload[z*4+1] = makeWord((zones[4*unit+z].Enabled?0:8) + (zones[4*unit+z].SelfTune?4:0));\n        msgs[unit].payload[z*4+2] = makeWord(clampTemp(0));\n        msgs[unit].payload[z*4+3] = makeWord(clampTemp(0));\n    }\n    if (Array.isArray(lastValues[unit])) {\n        for (var i = 0; i < 16; i++) {\n            if (msgs[unit].payload[i] != lastValues[unit][i]) {\n                anyChanges[unit] = true;\n                break;\n            }\n        }\n    }\n    else {\n        anyChanges[unit] = true;\n    }\n\n    if (anyChanges[unit])\n    {\n        global.set(`Write${unit}Vals`, msgs[unit].payload);\n    }\n}\n\nreturn [\n    anyChanges[0] ? msgs[0] : null,\n    anyChanges[1] ? msgs[1] : null,\n    anyChanges[2] ? msgs[2] : null,\n];\n",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 240,
+        "wires": [
+            [
+                "74544a2632270981"
+            ],
+            [
+                "91cf7427ace2e7cd"
+            ],
+            [
+                "c706f8950c5e392d"
+            ]
+        ]
+    },
+    {
+        "id": "acb0ad431e73dd55",
+        "type": "function",
+        "z": "f4c312cdd0835c2f",
+        "name": "Set Global Constants",
+        "func": "global.set(`machineNumber`, 1);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e5e1b3c5d78f4fb6",
+        "type": "inject",
+        "z": "f4c312cdd0835c2f",
+        "name": "Init",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.01",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 260,
+        "wires": [
+            [
+                "acb0ad431e73dd55"
             ]
         ]
     },
@@ -980,5 +1594,676 @@
         "x": 590,
         "y": 80,
         "wires": []
+    },
+    {
+        "id": "a87f64e14c7b517c",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read3",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "b826498401685724",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 420,
+        "wires": [
+            [
+                "d332971c79e6f731"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "727f6e297013d8e2",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read2",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "6bb6fa456075eb32",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 260,
+        "wires": [
+            [
+                "d944412902949ae4"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8a0c865a1cb08ff7",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read1",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "03d24f212f3a0679",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 100,
+        "wires": [
+            [
+                "2717c82094531bb2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "39dfa52bf98b2f33",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 1 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "97b2e8a85171b3f8",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "03d24f212f3a0679",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "1",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "2717c82094531bb2",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 100,
+        "wires": [
+            [
+                "39dfa52bf98b2f33"
+            ],
+            [
+                "ec7745182424622a"
+            ],
+            [
+                "49cde45fb0374a1f"
+            ],
+            [
+                "8b7026f87f8a267e"
+            ]
+        ]
+    },
+    {
+        "id": "ec7745182424622a",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 2 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "8b7058ce384d10a7",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "03d24f212f3a0679",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "2",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "49cde45fb0374a1f",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 3 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "934364c959e9bb43",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "03d24f212f3a0679",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "3",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "8b7026f87f8a267e",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 4 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "e54e26312981cfb6",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "03d24f212f3a0679",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "4",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "0f2dce9146065c69",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 5 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "36160ea804b58025",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "6bb6fa456075eb32",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "5",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d944412902949ae4",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 260,
+        "wires": [
+            [
+                "0f2dce9146065c69"
+            ],
+            [
+                "9c83d11c7f9399c6"
+            ],
+            [
+                "79e6493df2f8cb7a"
+            ],
+            [
+                "56e597155071d27e"
+            ]
+        ]
+    },
+    {
+        "id": "9c83d11c7f9399c6",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 6 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "9fc1a33aafd4b025",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "6bb6fa456075eb32",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "6",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "79e6493df2f8cb7a",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 7 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "953586ab3798305d",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "6bb6fa456075eb32",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "7",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "56e597155071d27e",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 8 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "de0d9821fd686e97",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "6bb6fa456075eb32",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "8",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "ef0f68ca3da76d24",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 9 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "67b9eb49f9e9bda0",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b826498401685724",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "9",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d332971c79e6f731",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 420,
+        "wires": [
+            [
+                "ef0f68ca3da76d24"
+            ],
+            [
+                "be6260cde63ab594"
+            ],
+            [
+                "1083138d656222c8"
+            ],
+            [
+                "e406d2c3d5c3ed5a"
+            ]
+        ]
+    },
+    {
+        "id": "be6260cde63ab594",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 10 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "ccae82d470e59db0",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b826498401685724",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "10",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "1083138d656222c8",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 11 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "dcb46e110cb2b7e9",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b826498401685724",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "11",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "e406d2c3d5c3ed5a",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 12 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "5765e6a6197a13a4",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b826498401685724",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "12",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "415430c092555714",
+        "type": "inject",
+        "z": "35b16d5ecdf07d35",
+        "name": "Every Minute",
+        "props": [],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "5.5",
+        "topic": "",
+        "x": 260,
+        "y": 300,
+        "wires": [
+            [
+                "8a0c865a1cb08ff7",
+                "727f6e297013d8e2",
+                "a87f64e14c7b517c"
+            ]
+        ]
+    },
+    {
+        "id": "28760b4314950aac",
+        "type": "ui-button",
+        "z": "35b16d5ecdf07d35",
+        "group": "61844bc14615df73",
+        "name": "GetAllButton",
+        "label": "Get All",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 250,
+        "y": 240,
+        "wires": [
+            [
+                "8a0c865a1cb08ff7",
+                "727f6e297013d8e2",
+                "a87f64e14c7b517c"
+            ]
+        ]
     }
 ]
