@@ -4,20 +4,22 @@ msg.payload.variables = [];
 
 var testL = global.get(`TestL`);
 var testR = global.get(`TestR`);
+var batchNumberL = global.get(`BatchNumberL`);
+var batchNumberR = global.get(`BatchNumberR`);
 var m = global.get(`machineNumber`);
 var firstZone = 1;
 
-if (msg.modbusRequest.unitid == "4")
+if (msg.modbusRequest.unitid == "1" || msg.modbusRequest.unitid == "4" || msg.modbusRequest.unitid == "10")
     firstZone = 1;
-else if (msg.modbusRequest.unitid == "5")
+else if (msg.modbusRequest.unitid == "2" || msg.modbusRequest.unitid == "5" || msg.modbusRequest.unitid == "11")
     firstZone = 5;
-else if (msg.modbusRequest.unitid == "6")
+else if (msg.modbusRequest.unitid == "3" || msg.modbusRequest.unitid == "6" || msg.modbusRequest.unitid == "12")
     firstZone = 9;
-else if (msg.modbusRequest.unitid == "7")
+else if (msg.modbusRequest.unitid == "7" || msg.modbusRequest.unitid == "13")
     firstZone = 13;
-else if (msg.modbusRequest.unitid == "8")
+else if (msg.modbusRequest.unitid == "8" || msg.modbusRequest.unitid == "14")
     firstZone = 17;
-else if (msg.modbusRequest.unitid == "9")
+else if (msg.modbusRequest.unitid == "9" || msg.modbusRequest.unitid == "15")
     firstZone = 21;
 
 if (msg.topic == "requestB")
@@ -36,12 +38,7 @@ function makeVariable(zone, name, value)
     }
 }
 
-var influxMsg = {tags:{
-    machine: m,
-    stream: stream,
-    zone: firstZone,
-}}
-influxMsg = {};
+var influxMsg = {};
 influxMsg.payload = [];
 mqttMsg = {};
 mqttMsg.topic = `AAP/Hamilton/Pultrusion/Machine${m}/stream${stream}/`;
@@ -58,6 +55,7 @@ for (var z=0; z<2; z++)
     var zone = (z + firstZone - 1)%12 + 1;
     var plug = z + firstZone;
     var test = z<13 ? testR : testL;
+    var batchNumber = z<13 ? batchNumberR : batchNumberL;
     
     //PLC
     var v = 0;
@@ -81,6 +79,7 @@ for (var z=0; z<2; z++)
         mqttMsg.payload[z].fields[q++] = {name: "Amps", value: amps};
     mqttMsg.payload[z].fields[q++] = {name: "Enabled", value: enabled};
     mqttMsg.payload[z].fields[q++] = {name: "SelfTuning", value: selfTuning};
+    mqttMsg.payload[z].fields[q++] = {name: "BatchNumber", value: batchNumber};
         
     //InfluxDB
     flow.set(`${z+firstZone}PV`, pv);
@@ -98,6 +97,7 @@ for (var z=0; z<2; z++)
                 zone: zone,
                 plug: plug,
                 test: test,
+                batchNumber: batchNumber,
             },
         ];
 }

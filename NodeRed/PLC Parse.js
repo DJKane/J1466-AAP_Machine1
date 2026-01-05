@@ -1,11 +1,28 @@
-var zones = msg.payload.variables[0].value;
-global.set(`TestL`, msg.payload.variables[1].value === true);
-global.set(`TestR`, msg.payload.variables[2].value === true);
+var zones = []
+for (var v = 0; v < msg.payload.variables.length; v++) {
+    switch(msg.payload.variables[v].path) {
+        case "Arp.Plc.Eclr/Zone":
+            zones = msg.payload.variables[v].value;
+            break;
+        case "Arp.Plc.Eclr/TestR":
+            global.set(`TestR`, msg.payload.variables[v].value === true);
+            break;
+        case "Arp.Plc.Eclr/TestL":
+            global.set(`TestL`, msg.payload.variables[v].value === true);
+            break;
+        case "Arp.Plc.Eclr/BatchNumberR":
+            global.set(`BatchNumberR`, msg.payload.variables[v].value);
+            break;
+        case "Arp.Plc.Eclr/BatchNumberL":
+            global.set(`BatchNumberL`, msg.payload.variables[v].value);
+            break;
+    }
+}
 var lastValues = [];
 var msgs = [{},{},{},{},{},{}];
 var anyChanges = [false,false,false,false,false,false];
 
-for(var i = 0; i < 24; i++)
+for(var i = 0; i < zones.length; i++)
     global.set(`${i+1}Enabled`, zones[i].Enabled);
     
 function clampTemp(temp)
@@ -25,7 +42,7 @@ function makeWord(num)
     return num & 0xFFFF;
 }
 
-for (var unit = 0; unit < 6; unit++)
+for (var unit = 0; unit < zones.length / 4; unit++)
 {
     lastValues[unit] = global.get(`Write${unit}Vals`);
 

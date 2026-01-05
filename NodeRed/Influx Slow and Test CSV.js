@@ -7,12 +7,12 @@ if (m == 1)
 
 var sampleL = null;
 var testL = global.get(`TestL`);
-if (testL)
+if (testL && m > 1)
     sampleL = {
         payload:{
             timestamp: Date.now()
         },
-        filename:"nodered:/data/stream3.csv",
+        filename:`nodered:/data/stream${stream}.csv`,
         columns:"timestamp",
     };
 var sampleR = null;
@@ -22,12 +22,13 @@ if (testR)
         payload:{
             timestamp: Date.now()
         },
-        filename:"nodered:/data/stream2.csv",
+        filename:`nodered:/data/stream${stream - 1}.csv`,
         columns:"timestamp",
     };
 
+    var numOfZones = m > 1 ? 24 : 12;
 var j = 0;
-for(var i = 1; i <= 24; i++)
+for(var i = 1; i <= numOfZones; i++)
 {
     if (global.get(`${i}Enabled`))
     {
