@@ -23,14 +23,17 @@
         "category": "",
         "in": [
             {
-                "x": 40,
-                "y": 140,
+                "x": 20,
+                "y": 260,
                 "wires": [
                     {
                         "id": "706c2eaa29a64752"
                     },
                     {
                         "id": "736ffd4dde8f80ec"
+                    },
+                    {
+                        "id": "53bf04bf1393dfd9"
                     }
                 ]
             }
@@ -878,7 +881,7 @@
         "type": "function",
         "z": "17a988668c938554",
         "name": "Split Values",
-        "func": "return [\n    {payload : msg.p},\n    {payload : msg.i},\n    {payload : msg.d},\n    {payload : msg.t},\n    ];",
+        "func": "if (msg.topic == \"manual\")\n    return [\n        {payload : msg.p},\n        {payload : msg.i},\n        {payload : msg.d},\n        {payload : msg.t},\n        ];",
         "outputs": 4,
         "timeout": 0,
         "noerr": 0,
@@ -1213,10 +1216,57 @@
         "database": "database",
         "precisionV18FluxV20": "s",
         "retentionPolicyV18Flux": "",
-        "org": "A2P",
+        "org": "AAP",
         "bucket": "Pultrusion",
         "x": 520,
         "y": 300,
+        "wires": []
+    },
+    {
+        "id": "53bf04bf1393dfd9",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "MQTT",
+        "func": "var m = global.get(\"machineNumber\");\nvar z = env.get(\"zoneNumber\");\nvar s = m*2 - 1;\nif (m > 1 && z < 13)\n    s -= 1;\n    \nvar topicBase = `AAP/Hamilton/Pultrusion/Machine${m}/stream${s}/zone${z > 12 ? z - 12 : z}/`\nreturn [\n    {topic: topicBase + 'p', payload: msg.p},\n    {topic: topicBase + 'i', payload: msg.i},\n    {topic: topicBase + 'd', payload: msg.d},\n    {topic: topicBase + 't', payload: msg.t},\n    ];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 230,
+        "y": 400,
+        "wires": [
+            [
+                "b17098f96827ba8c"
+            ],
+            [
+                "b17098f96827ba8c"
+            ],
+            [
+                "b17098f96827ba8c"
+            ],
+            [
+                "b17098f96827ba8c"
+            ]
+        ]
+    },
+    {
+        "id": "b17098f96827ba8c",
+        "type": "mqtt out",
+        "z": "17a988668c938554",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4f139bbd1b4c034f",
+        "x": 430,
+        "y": 400,
         "wires": []
     },
     {
@@ -2393,11 +2443,6 @@
                 "name": "address",
                 "value": "72",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2458,11 +2503,6 @@
                 "name": "address",
                 "value": "76",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2494,11 +2534,6 @@
                 "name": "address",
                 "value": "80",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2530,11 +2565,6 @@
                 "name": "address",
                 "value": "84",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2566,11 +2596,6 @@
                 "name": "address",
                 "value": "72",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2631,11 +2656,6 @@
                 "name": "address",
                 "value": "76",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2667,11 +2687,6 @@
                 "name": "address",
                 "value": "80",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2703,11 +2718,6 @@
                 "name": "address",
                 "value": "84",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2739,11 +2749,6 @@
                 "name": "address",
                 "value": "72",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2804,11 +2809,6 @@
                 "name": "address",
                 "value": "76",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2840,11 +2840,6 @@
                 "name": "address",
                 "value": "80",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2876,11 +2871,6 @@
                 "name": "address",
                 "value": "84",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2912,11 +2902,6 @@
                 "name": "address",
                 "value": "72",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -3395,11 +3380,6 @@
                 "name": "address",
                 "value": "84",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -3425,8 +3405,8 @@
         "iconPosition": "left",
         "payload": "",
         "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
+        "topic": "manual",
+        "topicType": "str",
         "buttonColor": "",
         "textColor": "",
         "iconColor": "",
@@ -3466,8 +3446,8 @@
         "iconPosition": "left",
         "payload": "",
         "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
+        "topic": "manual",
+        "topicType": "str",
         "buttonColor": "",
         "textColor": "",
         "iconColor": "",
@@ -3482,6 +3462,40 @@
         "y": 740,
         "wires": [
             [
+                "ef0d7c9b53cf8a3a",
+                "dc07416c2bee24cf",
+                "d1c461c0b69db303"
+            ]
+        ]
+    },
+    {
+        "id": "38b18aab4ccb5f6f",
+        "type": "inject",
+        "z": "35b16d5ecdf07d35",
+        "name": "PID Poll",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 500,
+        "wires": [
+            [
+                "8a0c865a1cb08ff7",
+                "727f6e297013d8e2",
+                "a87f64e14c7b517c",
                 "ef0d7c9b53cf8a3a",
                 "dc07416c2bee24cf",
                 "d1c461c0b69db303"

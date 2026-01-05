@@ -32,13 +32,16 @@
         "in": [
             {
                 "x": 40,
-                "y": 140,
+                "y": 260,
                 "wires": [
                     {
                         "id": "706c2eaa29a64752"
                     },
                     {
                         "id": "736ffd4dde8f80ec"
+                    },
+                    {
+                        "id": "3304a3bcfb875e56"
                     }
                 ]
             }
@@ -191,11 +194,11 @@
         "serialParity": "none",
         "serialConnectionDelay": "100",
         "serialAsciiResponseStartDelimiter": "0x3A",
-        "unit_id": 1,
-        "commandDelay": 1,
-        "clientTimeout": 1000,
+        "unit_id": "1",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
         "reconnectOnTimeout": true,
-        "reconnectTimeout": 2000,
+        "reconnectTimeout": "2000",
         "parallelUnitIdsAllowed": true,
         "showErrors": true,
         "showWarnings": true,
@@ -540,7 +543,7 @@
         "type": "function",
         "z": "17a988668c938554",
         "name": "Split Values",
-        "func": "return [\n    {payload : msg.p},\n    {payload : msg.i},\n    {payload : msg.d},\n    {payload : msg.t},\n    ];",
+        "func": "if (msg.topic == \"manual\")\n    return [\n        {payload : msg.p},\n        {payload : msg.i},\n        {payload : msg.d},\n        {payload : msg.t},\n        ];",
         "outputs": 4,
         "timeout": 0,
         "noerr": 0,
@@ -704,7 +707,7 @@
         "database": "database",
         "precisionV18FluxV20": "s",
         "retentionPolicyV18Flux": "",
-        "org": "A2P",
+        "org": "AAP",
         "bucket": "Pultrusion",
         "x": 520,
         "y": 300,
@@ -880,6 +883,70 @@
                 "addef47733fb77fb"
             ]
         ]
+    },
+    {
+        "id": "3304a3bcfb875e56",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "MQTT",
+        "func": "var m = global.get(\"machineNumber\");\nvar z = env.get(\"zoneNumber\");\nvar s = m*2 - 1;\nif (m > 1 && z < 13)\n    s -= 1;\n    \nvar topicBase = `AAP/Hamilton/Pultrusion/Machine${m}/stream${s}/zone${z > 12 ? z - 12 : z}/`\nreturn [\n    {topic: topicBase + 'p', payload: msg.p},\n    {topic: topicBase + 'i', payload: msg.i},\n    {topic: topicBase + 'd', payload: msg.d},\n    {topic: topicBase + 't', payload: msg.t},\n    ];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 230,
+        "y": 380,
+        "wires": [
+            [
+                "c3e9208abd12b2ea",
+                "ea78c4bcd29591e1"
+            ],
+            [
+                "c3e9208abd12b2ea"
+            ],
+            [
+                "c3e9208abd12b2ea"
+            ],
+            [
+                "c3e9208abd12b2ea"
+            ]
+        ]
+    },
+    {
+        "id": "c3e9208abd12b2ea",
+        "type": "mqtt out",
+        "z": "17a988668c938554",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "a36b7889c5b07072",
+        "x": 390,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "ea78c4bcd29591e1",
+        "type": "debug",
+        "z": "17a988668c938554",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 360,
+        "wires": []
     },
     {
         "id": "592df8b9faca0ec7",
@@ -1780,7 +1847,7 @@
         "showErrors": true,
         "showWarnings": true,
         "logIOActivities": false,
-        "unitid": "",
+        "unitid": "1",
         "dataType": "HoldingRegister",
         "adr": "72",
         "quantity": "18",
@@ -1826,11 +1893,6 @@
                 "name": "address",
                 "value": "72",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -1891,11 +1953,6 @@
                 "name": "address",
                 "value": "76",
                 "type": "num"
-            },
-            {
-                "key": "DB2_SF_ORDER",
-                "value": "1",
-                "type": "str"
             }
         ],
         "x": 890,
@@ -2324,13 +2381,19 @@
         "id": "415430c092555714",
         "type": "inject",
         "z": "35b16d5ecdf07d35",
-        "name": "Every Minute",
-        "props": [],
+        "name": "PID Poll",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
         "repeat": "60",
         "crontab": "",
         "once": true,
         "onceDelay": "5.5",
         "topic": "",
+        "payload": "",
+        "payloadType": "date",
         "x": 260,
         "y": 300,
         "wires": [
@@ -2360,8 +2423,8 @@
         "iconPosition": "left",
         "payload": "",
         "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
+        "topic": "manual",
+        "topicType": "str",
         "buttonColor": "",
         "textColor": "",
         "iconColor": "",
