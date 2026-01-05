@@ -505,6 +505,37 @@
         "groupType": "default"
     },
     {
+        "id": "a36b7889c5b07072",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.3.10",
+        "port": "51883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
         "id": "706c2eaa29a64752",
         "type": "function",
         "z": "17a988668c938554",
@@ -851,48 +882,6 @@
         ]
     },
     {
-        "id": "512a2afaca550d7c",
-        "type": "inject",
-        "z": "f4c312cdd0835c2f",
-        "g": "7d708220e7352df6",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "1",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "1",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 130,
-        "y": 160,
-        "wires": [
-            [
-                "d28e5ee5688987e4"
-            ]
-        ]
-    },
-    {
-        "id": "d28e5ee5688987e4",
-        "type": "plc-read-variables",
-        "z": "f4c312cdd0835c2f",
-        "g": "7d708220e7352df6",
-        "plc_connector": "b17d34f713647319",
-        "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/Test",
-        "searchbar": "",
-        "x": 390,
-        "y": 160,
-        "wires": [
-            [
-                "b314ab68ffa53120"
-            ]
-        ]
-    },
-    {
         "id": "592df8b9faca0ec7",
         "type": "comment",
         "z": "f4c312cdd0835c2f",
@@ -900,28 +889,6 @@
         "info": "",
         "x": 290,
         "y": 40,
-        "wires": []
-    },
-    {
-        "id": "a8c69e3fc9a7aed9",
-        "type": "comment",
-        "z": "f4c312cdd0835c2f",
-        "g": "7d708220e7352df6",
-        "name": "Configuration of PLCnext Parameters",
-        "info": "",
-        "x": 450,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "01b7cf4196c38069",
-        "type": "comment",
-        "z": "f4c312cdd0835c2f",
-        "g": "7d708220e7352df6",
-        "name": "Configuration of Update Time",
-        "info": "",
-        "x": 160,
-        "y": 120,
         "wires": []
     },
     {
@@ -974,7 +941,7 @@
         "var_list": "{\"items\":[]}",
         "searchbar": "Arp.Plc.Eclr/Zone[9].PV",
         "x": 930,
-        "y": 480,
+        "y": 420,
         "wires": [
             []
         ]
@@ -983,19 +950,22 @@
         "id": "5657e8d6b72dd7c0",
         "type": "function",
         "z": "f4c312cdd0835c2f",
-        "name": "PLCnext Formatter",
-        "func": "values = msg.payload;\nmsg.payload = {};\nmsg.payload.variables = [];\n\nvar test = global.get(`Test`);\nvar m = global.get(`machineNumber`);\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"1\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"2\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"3\")\n    firstZone = 9;\n    \nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nvar stream = m*2-1;\nif (m > 1 && firstZone < 13)\n    stream -= 1;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar influxMsg = {tags:{\n    machine: m,\n    stream: stream,\n    zone: firstZone,\n}}\noutputMsg = {};\noutputMsg.payload = [];\nvar v = 0;\nfor (var z=0; z<2; z++)\n{\n    if (global.get(`${z + firstZone}Enabled`))\n        outputMsg.payload[z] = [\n            {\n                duty_pct:values[z*9+2]*0.1,\n            },\n            {\n                machine: m,\n                stream: stream,\n                zone: (z + firstZone - 1)%12 + 1,\n                plug: z + firstZone,\n                test: test,\n            },\n        ];\n    flow.set(`${z+firstZone}PV`, values[z*9]);\n    flow.set(`${z+firstZone}Output`, values[z*9+2]*0.1);\n    flow.set(`${z+firstZone}Amps`, values[z*9+4]*0.1);\n    msg.payload.variables[v++] = makeVariable(z,\"PV\",values[z*9+0]);\n    msg.payload.variables[v++] = makeVariable(z,\"SPA\",values[z*9+1]);\n    msg.payload.variables[v++] = makeVariable(z,\"Output\",values[z*9+2]*0.1);\n    msg.payload.variables[v++] = makeVariable(z,\"Alarms\",values[z*9+3]);\n    msg.payload.variables[v++] = makeVariable(z,\"Amps\",values[z*9+4]*0.1);\n    msg.payload.variables[v++] = makeVariable(z,\"Enabled\", (values[z*9+5] & 8) == 0);\n    msg.payload.variables[v++] = makeVariable(z,\"SelfTuning\", (values[z*9+5] & 4) > 0);\n}\n\nreturn [msg,outputMsg];",
-        "outputs": 2,
+        "name": "Gefran Parse",
+        "func": "values = msg.payload;\nmsg.payload = {};\nmsg.payload.variables = [];\n\nvar test = global.get(`Test`);\nvar m = global.get(`machineNumber`);\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"1\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"2\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"3\")\n    firstZone = 9;\n    \nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nvar stream = m*2-1;\nif (m > 1 && firstZone < 13)\n    stream -= 1;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar influxMsg = {tags:{\n    machine: m,\n    stream: stream,\n    zone: firstZone,\n}}\ninfluxMsg = {};\ninfluxMsg.payload = [];\nmqttMsg = {};\nmqttMsg.topic = `AAP/Hamilton/Pultrusion/Machine${m}/stream${stream}/`;\nmqttMsg.payload = [{},{}];\nfor (var z=0; z<2; z++)\n{\n    var pv = values[z*9+0];\n    var spa = values[z*9+1];\n    var output = values[z*9+2]*0.1;\n    var alarms = values[z*9+3];\n    var amps = values[z*9+4]*0.1;\n    var enabled = (values[z*9+5] & 8) == 0;\n    var selfTuning = (values[z*9+5] & 4) > 0;\n    var zone = (z + firstZone - 1)%12 + 1;\n    var plug = z + firstZone;\n    \n    //PLC\n    var v = 0;\n    msg.payload.variables[v++] = makeVariable(z,\"PV\", pv);\n    msg.payload.variables[v++] = makeVariable(z,\"SPA\", spa);\n    msg.payload.variables[v++] = makeVariable(z,\"Output\", output);\n    msg.payload.variables[v++] = makeVariable(z,\"Alarms\", alarms);\n    msg.payload.variables[v++] = makeVariable(z,\"Amps\", amps);\n    msg.payload.variables[v++] = makeVariable(z,\"Enabled\", enabled);\n    msg.payload.variables[v++] = makeVariable(z,\"SelfTuning\", selfTuning);\n        \n    //InfluxDB\n    flow.set(`${z+firstZone}PV`, pv);\n    flow.set(`${z+firstZone}Output`, output);\n    if (output > 0.05)\n        flow.set(`${z+firstZone}Amps`, amps);\n    if (global.get(`${z + firstZone}Enabled`))\n        influxMsg.payload[z] = [\n            {\n                duty_pct:output,\n            },\n            {\n                machine: m,\n                stream: stream,\n                zone: zone,\n                plug: plug,\n                test: test,\n            },\n        ];\n    \n    //MQTT\n    mqttMsg.payload[z].zone = (z + firstZone - 1)%12 + 1;\n    mqttMsg.payload[z].fields = [];\n    var q =0;\n    mqttMsg.payload[z].fields[q++] = {name: \"PV\", value: pv};\n    mqttMsg.payload[z].fields[q++] = {name: \"SPA\", value: spa};\n    mqttMsg.payload[z].fields[q++] = {name: \"Output\", value: output};\n    mqttMsg.payload[z].fields[q++] = {name: \"Alarms\", value: alarms};\n    if (output > 0.05)\n        mqttMsg.payload[z].fields[q++] = {name: \"Amps\", value: amps};\n    mqttMsg.payload[z].fields[q++] = {name: \"Enabled\", value: enabled};\n    mqttMsg.payload[z].fields[q++] = {name: \"SelfTuning\", value: selfTuning};\n}\n\nreturn [msg,mqttMsg,influxMsg];",
+        "outputs": 3,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 710,
+        "x": 690,
         "y": 480,
         "wires": [
             [
                 "e5d2b6aa3223fb6c"
+            ],
+            [
+                "f87dbe2dfb6ddb01"
             ],
             [
                 "ee202aa932f38ac1"
@@ -1109,8 +1079,8 @@
         "keepMsgProperties": false,
         "delayOnStart": false,
         "startDelayTime": "",
-        "x": 950,
-        "y": 280,
+        "x": 910,
+        "y": 200,
         "wires": [
             [],
             []
@@ -1133,8 +1103,8 @@
         "keepMsgProperties": false,
         "delayOnStart": false,
         "startDelayTime": "",
-        "x": 950,
-        "y": 240,
+        "x": 910,
+        "y": 160,
         "wires": [
             [],
             []
@@ -1157,8 +1127,8 @@
         "keepMsgProperties": false,
         "delayOnStart": false,
         "startDelayTime": "",
-        "x": 950,
-        "y": 200,
+        "x": 910,
+        "y": 120,
         "wires": [
             [],
             []
@@ -1306,8 +1276,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 510,
-        "y": 740,
+        "x": 490,
+        "y": 660,
         "wires": [
             [
                 "f71dab88ed1ba6be"
@@ -1318,7 +1288,7 @@
         "id": "f71dab88ed1ba6be",
         "type": "function",
         "z": "f4c312cdd0835c2f",
-        "name": "temp & amps",
+        "name": "Influx Slow and Test CSV",
         "func": "msg.payload = [];\n\nvar m = global.get(`machineNumber`);\nvar stream = m*2-1;\nif (m == 1)\n    stream = 2;\n\nvar sample = null;\nvar test = global.get(`Test`);\nif (test)\n    sample = {\n        payload:{\n            timestamp: Date.now()\n        },\n        filename:\"nodered:/data/stream1.csv\",\n        columns:\"timestamp\",\n    };\n\nvar j = 0;\nfor(var i = 1; i <= 24; i++)\n{\n    if (global.get(`${i}Enabled`))\n    {\n        msg.payload[j++] = [\n            {\n                temperature_F: flow.get(`${i}PV`),\n                current_A: flow.get(`${i}Amps`),\n            },\n            {\n                machine: global.get(`machineNumber`),\n                stream: i<13 ? stream - 1 : stream,\n                zone: (i-1)%12+1,\n                plug: i,\n                test: test,\n            },\n        ]\n        if (test) {\n            sample.columns += `,temp${i},duty${i},amps${i}`;\n            sample.payload[`temp${i}`] = flow.get(`${i}PV`);\n            sample.payload[`duty${i}`] = flow.get(`${i}Output`);\n            sample.payload[`amps${i}`] = flow.get(`${i}Amps`);\n        }\n    }\n}\nreturn [ msg, sample ];",
         "outputs": 2,
         "timeout": 0,
@@ -1327,7 +1297,7 @@
         "finalize": "",
         "libs": [],
         "x": 690,
-        "y": 740,
+        "y": 660,
         "wires": [
             [
                 "ee202aa932f38ac1"
@@ -1353,8 +1323,8 @@
         "strings": true,
         "include_empty_strings": true,
         "include_null_values": true,
-        "x": 890,
-        "y": 740,
+        "x": 930,
+        "y": 660,
         "wires": [
             [
                 "400764f1cd4d1ddc"
@@ -1372,8 +1342,8 @@
         "createDir": true,
         "overwriteFile": "false",
         "encoding": "none",
-        "x": 1080,
-        "y": 740,
+        "x": 1060,
+        "y": 660,
         "wires": [
             []
         ]
@@ -1400,7 +1370,7 @@
         "id": "b314ab68ffa53120",
         "type": "function",
         "z": "f4c312cdd0835c2f",
-        "name": "Gefran Formatter",
+        "name": "PLC Parse",
         "func": "var zones = msg.payload.variables[0].value;\nglobal.set(`Test`, msg.payload.variables[1].value === true);\nvar lastValues = [];\nvar msgs = [{},{},{}];\nvar anyChanges = [false,false,false];\n\n\nfor(var i = 0; i < 12; i++)\n    global.set(`${i+1}Enabled`, zones[i].Enabled);\n\nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nfor (var unit = 0; unit < 3; unit++)\n{\n    lastValues[unit] = global.get(`Write${unit}Vals`);\n\n    msgs[unit] = {\n        payload: [\n            0,\n            1,\n            2,\n            3,\n            4,\n            5,\n            6,\n            7,\n            8,\n            9,\n            10,\n            11,\n            12,\n            13,\n            14,\n            15,\n        ]\n    };\n\n    for (var z = 0; z < 4; z++)\n    {\n        msgs[unit].payload[z*4+0] = makeWord(clampTemp(zones[4*unit+z].SP));\n        msgs[unit].payload[z*4+1] = makeWord((zones[4*unit+z].Enabled?0:8) + (zones[4*unit+z].SelfTune?4:0));\n        msgs[unit].payload[z*4+2] = makeWord(clampTemp(0));\n        msgs[unit].payload[z*4+3] = makeWord(clampTemp(0));\n    }\n    if (Array.isArray(lastValues[unit])) {\n        for (var i = 0; i < 16; i++) {\n            if (msgs[unit].payload[i] != lastValues[unit][i]) {\n                anyChanges[unit] = true;\n                break;\n            }\n        }\n    }\n    else {\n        anyChanges[unit] = true;\n    }\n\n    if (anyChanges[unit])\n    {\n        global.set(`Write${unit}Vals`, msgs[unit].payload);\n    }\n}\n\nreturn [\n    anyChanges[0] ? msgs[0] : null,\n    anyChanges[1] ? msgs[1] : null,\n    anyChanges[2] ? msgs[2] : null,\n];\n",
         "outputs": 3,
         "timeout": 0,
@@ -1408,8 +1378,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 770,
-        "y": 240,
+        "x": 710,
+        "y": 160,
         "wires": [
             [
                 "74544a2632270981"
@@ -1468,6 +1438,149 @@
                 "acb0ad431e73dd55"
             ]
         ]
+    },
+    {
+        "id": "f87dbe2dfb6ddb01",
+        "type": "function",
+        "z": "f4c312cdd0835c2f",
+        "name": "MQTT Zone Split",
+        "func": "msg1 = {\n    topic: msg.topic + `zone${msg.payload[0].zone}/`,\n    payload: msg.payload[0].fields,\n}\nmsg2 = {\n    topic: msg.topic + `zone${msg.payload[1].zone}/`,\n    payload: msg.payload[1].fields,\n}\nreturn [msg1, msg2];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 500,
+        "wires": [
+            [
+                "34c1b0695a210f02"
+            ],
+            [
+                "34c1b0695a210f02"
+            ]
+        ]
+    },
+    {
+        "id": "34c1b0695a210f02",
+        "type": "function",
+        "z": "f4c312cdd0835c2f",
+        "name": "MQTT Field Split",
+        "func": "msgs = [];\nfor (var i = 0; i < 7 && i < msg.payload.length; i++) {\n    msgs[i] = {\n        topic: msg.topic + msg.payload[i].name,\n        payload: msg.payload[i].value,\n    }\n}\nreturn msgs;",
+        "outputs": 7,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 500,
+        "wires": [
+            [
+                "29db0821cc7dfdeb"
+            ],
+            [
+                "29db0821cc7dfdeb"
+            ],
+            [
+                "29db0821cc7dfdeb"
+            ],
+            [
+                "29db0821cc7dfdeb"
+            ],
+            [
+                "29db0821cc7dfdeb"
+            ],
+            [
+                "29db0821cc7dfdeb"
+            ],
+            [
+                "29db0821cc7dfdeb"
+            ]
+        ]
+    },
+    {
+        "id": "29db0821cc7dfdeb",
+        "type": "mqtt out",
+        "z": "f4c312cdd0835c2f",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "a36b7889c5b07072",
+        "x": 1330,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "512a2afaca550d7c",
+        "type": "inject",
+        "z": "f4c312cdd0835c2f",
+        "g": "7d708220e7352df6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "d28e5ee5688987e4"
+            ]
+        ]
+    },
+    {
+        "id": "d28e5ee5688987e4",
+        "type": "plc-read-variables",
+        "z": "f4c312cdd0835c2f",
+        "g": "7d708220e7352df6",
+        "plc_connector": "b17d34f713647319",
+        "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/Test",
+        "searchbar": "",
+        "x": 390,
+        "y": 160,
+        "wires": [
+            [
+                "b314ab68ffa53120"
+            ]
+        ]
+    },
+    {
+        "id": "a8c69e3fc9a7aed9",
+        "type": "comment",
+        "z": "f4c312cdd0835c2f",
+        "g": "7d708220e7352df6",
+        "name": "Configuration of PLCnext Parameters",
+        "info": "",
+        "x": 450,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "01b7cf4196c38069",
+        "type": "comment",
+        "z": "f4c312cdd0835c2f",
+        "g": "7d708220e7352df6",
+        "name": "Configuration of Update Time",
+        "info": "",
+        "x": 160,
+        "y": 120,
+        "wires": []
     },
     {
         "id": "14d3ab40c201964c",
