@@ -43,6 +43,7 @@ influxMsg.payload = [];
 mqttMsg = {};
 mqttMsg.topic = `AAP/Hamilton/Pultrusion/Machine${m}/stream${stream}/`;
 mqttMsg.payload = [{},{}];
+var v = 0;
 for (var z=0; z<2; z++)
 {
     var pv = values[z*9+0];
@@ -58,7 +59,6 @@ for (var z=0; z<2; z++)
     var batchNumber = z<13 ? batchNumberR : batchNumberL;
     
     //PLC
-    var v = 0;
     msg.payload.variables[v++] = makeVariable(z,"PV", pv);
     msg.payload.variables[v++] = makeVariable(z,"SPA", spa);
     msg.payload.variables[v++] = makeVariable(z,"Output", output);

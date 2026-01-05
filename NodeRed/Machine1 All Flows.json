@@ -900,8 +900,7 @@
         "y": 380,
         "wires": [
             [
-                "c3e9208abd12b2ea",
-                "ea78c4bcd29591e1"
+                "c3e9208abd12b2ea"
             ],
             [
                 "c3e9208abd12b2ea"
@@ -930,22 +929,6 @@
         "broker": "a36b7889c5b07072",
         "x": 390,
         "y": 380,
-        "wires": []
-    },
-    {
-        "id": "ea78c4bcd29591e1",
-        "type": "debug",
-        "z": "17a988668c938554",
-        "name": "debug 10",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 550,
-        "y": 360,
         "wires": []
     },
     {
@@ -1018,7 +1001,7 @@
         "type": "function",
         "z": "f4c312cdd0835c2f",
         "name": "Gefran Parse",
-        "func": "var values = msg.payload;\nmsg.payload = {};\nmsg.payload.variables = [];\n\nvar testL = global.get(`TestL`);\nvar testR = global.get(`TestR`);\nvar batchNumberL = global.get(`BatchNumberL`);\nvar batchNumberR = global.get(`BatchNumberR`);\nvar m = global.get(`machineNumber`);\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"1\" || msg.modbusRequest.unitid == \"4\" || msg.modbusRequest.unitid == \"10\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"2\" || msg.modbusRequest.unitid == \"5\" || msg.modbusRequest.unitid == \"11\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"3\" || msg.modbusRequest.unitid == \"6\" || msg.modbusRequest.unitid == \"12\")\n    firstZone = 9;\nelse if (msg.modbusRequest.unitid == \"7\" || msg.modbusRequest.unitid == \"13\")\n    firstZone = 13;\nelse if (msg.modbusRequest.unitid == \"8\" || msg.modbusRequest.unitid == \"14\")\n    firstZone = 17;\nelse if (msg.modbusRequest.unitid == \"9\" || msg.modbusRequest.unitid == \"15\")\n    firstZone = 21;\n\nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nvar stream = m*2-1;\nif (m > 1 && firstZone < 13)\n    stream -= 1;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar influxMsg = {};\ninfluxMsg.payload = [];\nmqttMsg = {};\nmqttMsg.topic = `AAP/Hamilton/Pultrusion/Machine${m}/stream${stream}/`;\nmqttMsg.payload = [{},{}];\nfor (var z=0; z<2; z++)\n{\n    var pv = values[z*9+0];\n    var spa = values[z*9+1];\n    var output = values[z*9+2]*0.1;\n    var alarms = values[z*9+3];\n    var amps = values[z*9+4]*0.1;\n    var enabled = (values[z*9+5] & 8) == 0;\n    var selfTuning = (values[z*9+5] & 4) > 0;\n    var zone = (z + firstZone - 1)%12 + 1;\n    var plug = z + firstZone;\n    var test = z<13 ? testR : testL;\n    var batchNumber = z<13 ? batchNumberR : batchNumberL;\n    \n    //PLC\n    var v = 0;\n    msg.payload.variables[v++] = makeVariable(z,\"PV\", pv);\n    msg.payload.variables[v++] = makeVariable(z,\"SPA\", spa);\n    msg.payload.variables[v++] = makeVariable(z,\"Output\", output);\n    msg.payload.variables[v++] = makeVariable(z,\"Alarms\", alarms);\n    msg.payload.variables[v++] = makeVariable(z,\"Amps\", amps);\n    msg.payload.variables[v++] = makeVariable(z,\"Enabled\", enabled);\n    msg.payload.variables[v++] = makeVariable(z,\"SelfTuning\", selfTuning);\n    \n    //MQTT\n    mqttMsg.payload[z].zone = (z + firstZone - 1)%12 + 1;\n    mqttMsg.payload[z].fields = [];\n    var q =0;\n    mqttMsg.payload[z].fields[q++] = {name: \"PV\", value: pv};\n    mqttMsg.payload[z].fields[q++] = {name: \"SPA\", value: spa};\n    mqttMsg.payload[z].fields[q++] = {name: \"Output\", value: output};\n    mqttMsg.payload[z].fields[q++] = {name: \"Alarms\", value: alarms};\n    if (output > 0.05)\n        mqttMsg.payload[z].fields[q++] = {name: \"Amps\", value: amps};\n    mqttMsg.payload[z].fields[q++] = {name: \"Enabled\", value: enabled};\n    mqttMsg.payload[z].fields[q++] = {name: \"SelfTuning\", value: selfTuning};\n    mqttMsg.payload[z].fields[q++] = {name: \"BatchNumber\", value: batchNumber};\n        \n    //InfluxDB\n    flow.set(`${z+firstZone}PV`, pv);\n    flow.set(`${z+firstZone}Output`, output);\n    if (output > 0.05)\n        flow.set(`${z+firstZone}Amps`, amps);\n    if (global.get(`${z + firstZone}Enabled`))\n        influxMsg.payload[z] = [\n            {\n                duty_pct:output,\n            },\n            {\n                machine: m,\n                stream: stream,\n                zone: zone,\n                plug: plug,\n                test: test,\n                batchNumber: batchNumber,\n            },\n        ];\n}\n\nreturn [msg,mqttMsg,influxMsg];",
+        "func": "var values = msg.payload;\nmsg.payload = {};\nmsg.payload.variables = [];\n\nvar testL = global.get(`TestL`);\nvar testR = global.get(`TestR`);\nvar batchNumberL = global.get(`BatchNumberL`);\nvar batchNumberR = global.get(`BatchNumberR`);\nvar m = global.get(`machineNumber`);\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"1\" || msg.modbusRequest.unitid == \"4\" || msg.modbusRequest.unitid == \"10\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"2\" || msg.modbusRequest.unitid == \"5\" || msg.modbusRequest.unitid == \"11\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"3\" || msg.modbusRequest.unitid == \"6\" || msg.modbusRequest.unitid == \"12\")\n    firstZone = 9;\nelse if (msg.modbusRequest.unitid == \"7\" || msg.modbusRequest.unitid == \"13\")\n    firstZone = 13;\nelse if (msg.modbusRequest.unitid == \"8\" || msg.modbusRequest.unitid == \"14\")\n    firstZone = 17;\nelse if (msg.modbusRequest.unitid == \"9\" || msg.modbusRequest.unitid == \"15\")\n    firstZone = 21;\n\nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nvar stream = m*2-1;\nif (m > 1 && firstZone < 13)\n    stream -= 1;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar influxMsg = {};\ninfluxMsg.payload = [];\nmqttMsg = {};\nmqttMsg.topic = `AAP/Hamilton/Pultrusion/Machine${m}/stream${stream}/`;\nmqttMsg.payload = [{},{}];\nvar v = 0;\nfor (var z=0; z<2; z++)\n{\n    var pv = values[z*9+0];\n    var spa = values[z*9+1];\n    var output = values[z*9+2]*0.1;\n    var alarms = values[z*9+3];\n    var amps = values[z*9+4]*0.1;\n    var enabled = (values[z*9+5] & 8) == 0;\n    var selfTuning = (values[z*9+5] & 4) > 0;\n    var zone = (z + firstZone - 1)%12 + 1;\n    var plug = z + firstZone;\n    var test = z<13 ? testR : testL;\n    var batchNumber = z<13 ? batchNumberR : batchNumberL;\n    \n    //PLC\n    msg.payload.variables[v++] = makeVariable(z,\"PV\", pv);\n    msg.payload.variables[v++] = makeVariable(z,\"SPA\", spa);\n    msg.payload.variables[v++] = makeVariable(z,\"Output\", output);\n    msg.payload.variables[v++] = makeVariable(z,\"Alarms\", alarms);\n    msg.payload.variables[v++] = makeVariable(z,\"Amps\", amps);\n    msg.payload.variables[v++] = makeVariable(z,\"Enabled\", enabled);\n    msg.payload.variables[v++] = makeVariable(z,\"SelfTuning\", selfTuning);\n    \n    //MQTT\n    mqttMsg.payload[z].zone = (z + firstZone - 1)%12 + 1;\n    mqttMsg.payload[z].fields = [];\n    var q =0;\n    mqttMsg.payload[z].fields[q++] = {name: \"PV\", value: pv};\n    mqttMsg.payload[z].fields[q++] = {name: \"SPA\", value: spa};\n    mqttMsg.payload[z].fields[q++] = {name: \"Output\", value: output};\n    mqttMsg.payload[z].fields[q++] = {name: \"Alarms\", value: alarms};\n    if (output > 0.05)\n        mqttMsg.payload[z].fields[q++] = {name: \"Amps\", value: amps};\n    mqttMsg.payload[z].fields[q++] = {name: \"Enabled\", value: enabled};\n    mqttMsg.payload[z].fields[q++] = {name: \"SelfTuning\", value: selfTuning};\n    mqttMsg.payload[z].fields[q++] = {name: \"BatchNumber\", value: batchNumber};\n        \n    //InfluxDB\n    flow.set(`${z+firstZone}PV`, pv);\n    flow.set(`${z+firstZone}Output`, output);\n    if (output > 0.05)\n        flow.set(`${z+firstZone}Amps`, amps);\n    if (global.get(`${z + firstZone}Enabled`))\n        influxMsg.payload[z] = [\n            {\n                duty_pct:output,\n            },\n            {\n                machine: m,\n                stream: stream,\n                zone: zone,\n                plug: plug,\n                test: test,\n                batchNumber: batchNumber,\n            },\n        ];\n}\n\nreturn [msg,mqttMsg,influxMsg];",
         "outputs": 3,
         "timeout": 0,
         "noerr": 0,
@@ -1893,6 +1876,11 @@
                 "name": "address",
                 "value": "72",
                 "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
             }
         ],
         "x": 890,
@@ -1904,7 +1892,7 @@
         "type": "function",
         "z": "35b16d5ecdf07d35",
         "name": "Split Zone Data",
-        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        topic: msg.topic,\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
         "outputs": 4,
         "timeout": 0,
         "noerr": 0,
@@ -1953,6 +1941,11 @@
                 "name": "address",
                 "value": "76",
                 "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
             }
         ],
         "x": 890,
@@ -2072,7 +2065,7 @@
         "type": "function",
         "z": "35b16d5ecdf07d35",
         "name": "Split Zone Data",
-        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        topic: msg.topic,\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
         "outputs": 4,
         "timeout": 0,
         "noerr": 0,
@@ -2245,7 +2238,7 @@
         "type": "function",
         "z": "35b16d5ecdf07d35",
         "name": "Split Zone Data",
-        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        topic: msg.topic,\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
         "outputs": 4,
         "timeout": 0,
         "noerr": 0,
