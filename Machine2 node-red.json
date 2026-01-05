@@ -433,7 +433,7 @@
         "type": "ui-group",
         "name": "Group 1",
         "page": "21ad89b103b9db43",
-        "width": "6",
+        "width": "12",
         "height": "1",
         "order": 1,
         "showTitle": false,
@@ -793,6 +793,17 @@
         "groupType": "default"
     },
     {
+        "id": "cbbc60f8ea866ac4",
+        "type": "ui-spacer",
+        "group": "4e8a0cfb0d6d3376",
+        "name": "spacer",
+        "tooltip": "",
+        "order": 2,
+        "width": 1,
+        "height": 1,
+        "className": ""
+    },
+    {
         "id": "706c2eaa29a64752",
         "type": "function",
         "z": "17a988668c938554",
@@ -973,7 +984,7 @@
         "icon": "",
         "iconPosition": "left",
         "iconInnerPosition": "inside",
-        "spinner": "default",
+        "spinner": "stacked",
         "x": 430,
         "y": 60,
         "wires": [
@@ -1006,7 +1017,7 @@
         "icon": "",
         "iconPosition": "left",
         "iconInnerPosition": "inside",
-        "spinner": "default",
+        "spinner": "stacked",
         "x": 430,
         "y": 100,
         "wires": [
@@ -1039,7 +1050,7 @@
         "icon": "",
         "iconPosition": "left",
         "iconInnerPosition": "inside",
-        "spinner": "default",
+        "spinner": "stacked",
         "x": 430,
         "y": 140,
         "wires": [
@@ -1072,7 +1083,7 @@
         "icon": "",
         "iconPosition": "left",
         "iconInnerPosition": "inside",
-        "spinner": "default",
+        "spinner": "stacked",
         "x": 430,
         "y": 180,
         "wires": [
@@ -1325,7 +1336,7 @@
         "type": "function",
         "z": "436938ed0226b400",
         "name": "Gefran1 Formatter",
-        "func": "var zones = msg.payload.variables[0].value;\nglobal.set(`TestL`, msg.payload.variables[1].value === true);\nglobal.set(`TestR`, msg.payload.variables[2].value === true);\nvar lastValues = [];\nvar msgs = [{},{},{},{},{},{}];\nvar anyChanges = [false,false,false,false,false,false];\n\n\nfor(var i = 0; i < 24; i++)\n    global.set(`${i+1}Enabled`, zones[i].Enabled);\n\nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nfor (var unit = 0; unit < 6; unit++)\n{\n    lastValues[unit] = global.get(`Write${unit}Vals`);\n\n    msgs[unit] = {\n        payload: [\n            0,\n            1,\n            2,\n            3,\n            4,\n            5,\n            6,\n            7,\n            8,\n            9,\n            10,\n            11,\n            12,\n            13,\n            14,\n            15,\n        ]\n    };\n\n    for (var z = 0; z < 4; z++)\n    {\n        msgs[unit].payload[z*4+0] = makeWord(clampTemp(zones[4*unit+z].SP));\n        msgs[unit].payload[z*4+1] = makeWord((zones[4*unit+z].Enabled?0:8) + (zones[4*unit+z].SelfTune?4:0));\n        msgs[unit].payload[z*4+2] = makeWord(clampTemp(0));\n        msgs[unit].payload[z*4+3] = makeWord(clampTemp(0));\n    }\n    if (Array.isArray(lastValues[unit])) {\n        for (var i = 0; i < 16; i++) {\n            if (msgs[unit].payload[i] != lastValues[unit][i]) {\n                anyChanges[unit] = true;\n                break;\n            }\n        }\n    }\n    else {\n        anyChanges[unit] = true;\n    }\n\n    if (anyChanges[unit])\n    {\n        global.set(`Write${unit}Vals`, msgs[unit].payload);\n    }\n}\n\nreturn [\n    anyChanges[0] ? msgs[0] : null,\n    anyChanges[1] ? msgs[1] : null,\n    anyChanges[2] ? msgs[2] : null,\n    anyChanges[3] ? msgs[3] : null,\n    anyChanges[4] ? msgs[4] : null,\n    anyChanges[5] ? msgs[5] : null,\n];\n",
+        "func": "var zones = msg.payload.variables[0].value;\nglobal.set(`TestL`, msg.payload.variables[1].value === true);\nglobal.set(`TestR`, msg.payload.variables[2].value === true);\nvar lastValues = [];\nvar msgs = [{},{},{},{},{},{}];\nvar anyChanges = [false,false,false,false,false,false];\n\n\nfor(var i = 0; i < 24; i++)\n    global.set(`${i+1}Enabled`, zones[i].Enabled);\n\nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nfor (var unit = 0; unit < 6; unit++)\n{\n    lastValues[unit] = global.get(`Write${unit}Vals`);\n\n    msgs[unit] = {\n        payload: [\n            0,\n            1,\n            2,\n            3,\n            4,\n            5,\n            6,\n            7,\n            8,\n            9,\n            10,\n            11,\n            12,\n            13,\n            14,\n            15,\n        ]\n    };\n\n    for (var z = 0; z < 4; z++)\n    {\n        msgs[unit].payload[z*4+0] = makeWord(clampTemp(zones[4*unit+z].SP));\n        msgs[unit].payload[z*4+1] = makeWord((zones[4*unit+z].Enabled?0:8) + (zones[4*unit+z].SelfTune?4:0));\n        msgs[unit].payload[z*4+2] = makeWord(clampTemp(0));\n        msgs[unit].payload[z*4+3] = makeWord(clampTemp(0));\n    }\n    if (Array.isArray(lastValues[unit])) {\n        for (i = 0; i < 16; i++) {\n            if (msgs[unit].payload[i] != lastValues[unit][i]) {\n                anyChanges[unit] = true;\n                break;\n            }\n        }\n    }\n    else {\n        anyChanges[unit] = true;\n    }\n\n    if (anyChanges[unit])\n    {\n        global.set(`Write${unit}Vals`, msgs[unit].payload);\n    }\n}\n\nreturn [\n    anyChanges[0] ? msgs[0] : null,\n    anyChanges[1] ? msgs[1] : null,\n    anyChanges[2] ? msgs[2] : null,\n    anyChanges[3] ? msgs[3] : null,\n    anyChanges[4] ? msgs[4] : null,\n    anyChanges[5] ? msgs[5] : null,\n];\n",
         "outputs": 6,
         "timeout": 0,
         "noerr": 0,
@@ -1953,7 +1964,7 @@
         "type": "function",
         "z": "436938ed0226b400",
         "name": "temp & amps",
-        "func": "msg.payload = [];\n\nvar m = global.get(`machineNumber`);\nvar stream = m*2-1;\nif (m == 1)\n    stream = 2;\n\nvar sampleL = null;\nvar testL = global.get(`TestL`);\nif (testL)\n    sampleL = {\n        payload:{\n            timestamp: Date.now()\n        },\n        filename:\"/data/stream3.csv\",\n        columns:\"timestamp\",\n    };\nvar sampleR = null;\nvar testR = global.get(`TestR`);\nif (testR)\n    sampleR = {\n        payload:{\n            timestamp: Date.now()\n        },\n        filename:\"nodered:/data/stream2.csv\",\n        columns:\"timestamp\",\n    };\n\nvar j = 0;\nfor(var i = 1; i <= 24; i++)\n{\n    if (global.get(`${i}Enabled`))\n    {\n        msg.payload[j++] = [\n            {\n                temperature_F: flow.get(`${i}PV`),\n                current_A: flow.get(`${i}Amps`),\n            },\n            {\n                machine: global.get(`machineNumber`),\n                stream: i<13 ? stream - 1 : stream,\n                zone: (i-1)%12+1,\n                plug: i,\n                test: i<13 ? testR : testL,\n            },\n        ]\n        if (testL && i >= 13)\n        {\n            sampleL.columns += `,temp${i-12},duty${i-12},amps${i-12}`;\n            sampleL.payload[`temp${i-12}`] = flow.get(`${i}PV`);\n            sampleL.payload[`duty${i-12}`] = flow.get(`${i}Output`);\n            sampleL.payload[`amps${i-12}`] = flow.get(`${i}Amps`);\n        }\n        if (testR && i < 13)\n        {\n            sampleR.columns += `,temp${i},duty${i},amps${i}`;\n            sampleR.payload[`temp${i}`] = flow.get(`${i}PV`);\n            sampleR.payload[`duty${i}`] = flow.get(`${i}Output`);\n            sampleR.payload[`amps${i}`] = flow.get(`${i}Amps`);\n        }\n    }\n}\nreturn [ msg, sampleL, sampleR ];",
+        "func": "msg.payload = [];\n\nvar m = global.get(`machineNumber`);\nvar stream = m*2-1;\nif (m == 1)\n    stream = 2;\n\nvar sampleL = null;\nvar testL = global.get(`TestL`);\nif (testL)\n    sampleL = {\n        payload:{\n            timestamp: Date.now()\n        },\n        filename:\"nodered:/data/stream3.csv\",\n        columns:\"timestamp\",\n    };\nvar sampleR = null;\nvar testR = global.get(`TestR`);\nif (testR)\n    sampleR = {\n        payload:{\n            timestamp: Date.now()\n        },\n        filename:\"nodered:/data/stream2.csv\",\n        columns:\"timestamp\",\n    };\n\nvar j = 0;\nfor(var i = 1; i <= 24; i++)\n{\n    if (global.get(`${i}Enabled`))\n    {\n        msg.payload[j++] = [\n            {\n                temperature_F: flow.get(`${i}PV`),\n                current_A: flow.get(`${i}Amps`),\n            },\n            {\n                machine: global.get(`machineNumber`),\n                stream: i<13 ? stream - 1 : stream,\n                zone: (i-1)%12+1,\n                plug: i,\n                test: i<13 ? testR : testL,\n            },\n        ]\n        if (testL && i >= 13)\n        {\n            sampleL.columns += `,temp${i-12},duty${i-12},amps${i-12}`;\n            sampleL.payload[`temp${i-12}`] = flow.get(`${i}PV`);\n            sampleL.payload[`duty${i-12}`] = flow.get(`${i}Output`);\n            sampleL.payload[`amps${i-12}`] = flow.get(`${i}Amps`);\n        }\n        if (testR && i < 13)\n        {\n            sampleR.columns += `,temp${i},duty${i},amps${i}`;\n            sampleR.payload[`temp${i}`] = flow.get(`${i}PV`);\n            sampleR.payload[`duty${i}`] = flow.get(`${i}Output`);\n            sampleR.payload[`amps${i}`] = flow.get(`${i}Amps`);\n        }\n    }\n}\nreturn [ msg, sampleL, sampleR ];",
         "outputs": 3,
         "timeout": 0,
         "noerr": 0,

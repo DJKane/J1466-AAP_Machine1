@@ -8,6 +8,72 @@
         "env": []
     },
     {
+        "id": "35b16d5ecdf07d35",
+        "type": "tab",
+        "label": "PID",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "17a988668c938554",
+        "type": "subflow",
+        "name": "ZonePID",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "706c2eaa29a64752"
+                    },
+                    {
+                        "id": "736ffd4dde8f80ec"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [
+            {
+                "name": "ui-group",
+                "type": "ui-group",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "en-US": "Zone UI Group"
+                    },
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "gefran",
+                "type": "modbus-client",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "en-US": "Gefran"
+                    },
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "zoneNumber",
+                "type": "num",
+                "value": "0"
+            },
+            {
+                "name": "address",
+                "type": "num",
+                "value": ""
+            }
+        ],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
         "id": "5aa962ab5b491d0d",
         "type": "group",
         "z": "5c24d4e82af3d5c6",
@@ -236,6 +302,957 @@
         "showLogs": true
     },
     {
+        "id": "d5e4db8ea8e1e6ca",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "CentralPlcNext",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://192.168.3.10:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "d26ae779cd42b188",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "CentralPlcNext",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://192.168.3.10:58086",
+        "timeout": 10,
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "9616032c5b45a803",
+        "type": "ui-base",
+        "name": "My Dashboard",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "c2272bc9112d97d8",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "819d1e3cdc807bf9",
+        "type": "ui-page",
+        "name": "Page 1",
+        "ui": "9616032c5b45a803",
+        "path": "/page1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "c2272bc9112d97d8",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": 0,
+                "cols": 3
+            },
+            {
+                "name": "Tablet",
+                "px": 576,
+                "cols": 6
+            },
+            {
+                "name": "Small Desktop",
+                "px": 768,
+                "cols": 9
+            },
+            {
+                "name": "Desktop",
+                "px": 1024,
+                "cols": 12
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "7725b70af162ab6d",
+        "type": "ui-group",
+        "name": "Group 1",
+        "page": "819d1e3cdc807bf9",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": true,
+        "disabled": false,
+        "groupType": "default"
+    },
+    {
+        "id": "61844bc14615df73",
+        "type": "ui-group",
+        "name": "Group 1",
+        "page": "21ad89b103b9db43",
+        "width": "12",
+        "height": "1",
+        "order": 1,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "189eadc21145ecd0",
+        "type": "ui-group",
+        "name": "Group 14",
+        "page": "1eb399db7c0af545",
+        "width": "9",
+        "height": "1",
+        "order": 1,
+        "showTitle": false,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "21ad89b103b9db43",
+        "type": "ui-page",
+        "name": "Stream 4 (Right)",
+        "ui": "9616032c5b45a803",
+        "path": "/right",
+        "icon": "arrow-up-right-bold",
+        "layout": "grid",
+        "theme": "14a60ac4ede7757a",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 2,
+        "className": "",
+        "visible": true,
+        "disabled": false
+    },
+    {
+        "id": "1eb399db7c0af545",
+        "type": "ui-page",
+        "name": "Stream 5 (Left)",
+        "ui": "9616032c5b45a803",
+        "path": "/left",
+        "icon": "arrow-up-left-bold",
+        "layout": "grid",
+        "theme": "14a60ac4ede7757a",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 3,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "14a60ac4ede7757a",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094CE",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "f181fbfb9e518003",
+        "type": "ui-group",
+        "name": "Zone 1",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "1253b6a437285da6",
+        "type": "ui-group",
+        "name": "Zone 2",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "f660d8ba8ff496e5",
+        "type": "ui-group",
+        "name": "Zone 3",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "3167f378c6aed5c6",
+        "type": "ui-group",
+        "name": "Zone 4",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 5,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "25e964d05769ad33",
+        "type": "ui-group",
+        "name": "Zone 5",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 6,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "7dba836c908eaeda",
+        "type": "ui-group",
+        "name": "Zone 6",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 7,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "400619ca90c1f9cb",
+        "type": "ui-group",
+        "name": "Zone 7",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 8,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "961365fe4577e5b8",
+        "type": "ui-group",
+        "name": "Zone 8",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 9,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "29e8999daff62fd0",
+        "type": "ui-group",
+        "name": "Zone 9",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 10,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "9fedbc3207bc1d1f",
+        "type": "ui-group",
+        "name": "Zone 10",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 11,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "962b03b723568095",
+        "type": "ui-group",
+        "name": "Zone 11",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 12,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "910a88da05a8d7e1",
+        "type": "ui-group",
+        "name": "Zone 12",
+        "page": "21ad89b103b9db43",
+        "width": "10",
+        "height": "1",
+        "order": 13,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "efee407ce93b5e4c",
+        "type": "ui-group",
+        "name": "Zone 13",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "03362c158af4515a",
+        "type": "ui-group",
+        "name": "Zone 14",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "8fee11719da026cb",
+        "type": "ui-group",
+        "name": "Zone 15",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ecf3828d5151f88a",
+        "type": "ui-group",
+        "name": "Zone 16",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 5,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "3d0bc1256ae3ba0c",
+        "type": "ui-group",
+        "name": "Zone 17",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 6,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "3311681ac7f4bd7d",
+        "type": "ui-group",
+        "name": "Zone 18",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 7,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "b1d89aa83bd1f941",
+        "type": "ui-group",
+        "name": "Zone 19",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 8,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ea5b14fdcc2e59e0",
+        "type": "ui-group",
+        "name": "Zone 20",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 9,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "e879e027079cb4b0",
+        "type": "ui-group",
+        "name": "Zone 21",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 10,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "0ec39d76046a7b9c",
+        "type": "ui-group",
+        "name": "Zone 22",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 11,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "8c2c3e5f425e011c",
+        "type": "ui-group",
+        "name": "Zone 23",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 12,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "62fc3d5a1ca408de",
+        "type": "ui-group",
+        "name": "Zone 24",
+        "page": "1eb399db7c0af545",
+        "width": "10",
+        "height": "1",
+        "order": 13,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "4f139bbd1b4c034f",
+        "type": "mqtt-broker",
+        "name": "CentralPLCnext",
+        "broker": "192.168.3.10",
+        "port": "51883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "706c2eaa29a64752",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Split Values",
+        "func": "return [\n    {payload : msg.p},\n    {payload : msg.i},\n    {payload : msg.d},\n    {payload : msg.t},\n    ];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "5dba53281c2ed83a"
+            ],
+            [
+                "4ba5cc9e62c6c178"
+            ],
+            [
+                "3d84ad479d83d915"
+            ],
+            [
+                "90e911e2ab3eaf70"
+            ]
+        ]
+    },
+    {
+        "id": "7ef158487665bd98",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Store",
+        "func": "flow.set(`${env.get(\"zoneNumber\")}P`, msg.payload);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "1df00faa7ed2f0ba",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Store",
+        "func": "flow.set(`${env.get(\"zoneNumber\")}I`, msg.payload);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "c1cc073a29dae67c",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Store",
+        "func": "flow.set(`${env.get(\"zoneNumber\")}D`, msg.payload);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "c822af1c209c1a46",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Store",
+        "func": "flow.set(`${env.get(\"zoneNumber\")}T`, msg.payload);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "addef47733fb77fb",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Recall",
+        "func": "msg.payload = [\n    flow.get(`${env.get(\"zoneNumber\")}P`) * 10,\n    flow.get(`${env.get(\"zoneNumber\")}I`) * 100,\n    flow.get(`${env.get(\"zoneNumber\")}D`) * 100,\n    flow.get(`${env.get(\"zoneNumber\")}T`),\n    ];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 220,
+        "wires": [
+            [
+                "63b12672611e14eb"
+            ]
+        ]
+    },
+    {
+        "id": "63b12672611e14eb",
+        "type": "modbus-write",
+        "z": "17a988668c938554",
+        "name": "WriteGefran",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "unitid": "",
+        "dataType": "MHoldingRegisters",
+        "adr": "${address}",
+        "quantity": "4",
+        "server": "${gefran}",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 790,
+        "y": 220,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "736ffd4dde8f80ec",
+        "type": "function",
+        "z": "17a988668c938554",
+        "name": "Detect Changes",
+        "func": "var z = env.get(\"zoneNumber\");\nvar lastP = flow.get(`${z}Pl`);\nvar lastI = flow.get(`${z}Il`);\nvar lastD = flow.get(`${z}Dl`);\nvar lastT = flow.get(`${z}Tl`);\nvar wasEnabled = flow.get(`${z}e`);\nvar isEnabled = global.get(`${z}Enabled`);\nflow.set(`${z}e`, isEnabled);\n\n//check if we're running\nif (!isEnabled)\n    return null;\n\n//skip change check on rising edge of enable to always record the PID values on start\nif (wasEnabled)\n    //check if there are changes\n    if (lastP ==  msg.p && lastI ==  msg.i && lastD ==  msg.d && lastT ==  msg.t)\n        return null;\n    \nvar m = global.get(\"machineNumber\");\nvar stream = 2*m - 1;\nif (m > 1 && z <= 12)\n    stream -= 1;\n   \nvar testL = global.get(`TestL`);\nvar testR = global.get(`TestR`);\n   \nmsg.payload = [\n    {\n        PID_Pb:msg.p,\n        PID_It:msg.i,\n        PID_dt:msg.d,\n        PID_Ct:msg.t\n    },\n    {\n        machine: m,\n        stream: stream,\n        zone: (z-1)%12+1,\n        plug: z,\n        test: z<13 ? testR : testL,\n    },\n];\n\nflow.set(`${z}Pl`, msg.p);\nflow.set(`${z}Il`, msg.i);\nflow.set(`${z}Dl`, msg.d);\nflow.set(`${z}Tl`, msg.t);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 300,
+        "wires": [
+            [
+                "bda0ca8a7992232b"
+            ]
+        ]
+    },
+    {
+        "id": "5dba53281c2ed83a",
+        "type": "ui-number-input",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "P",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "999.9",
+        "step": "0.1",
+        "tooltip": "",
+        "passthru": true,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "stacked",
+        "x": 430,
+        "y": 60,
+        "wires": [
+            [
+                "7ef158487665bd98"
+            ]
+        ]
+    },
+    {
+        "id": "4ba5cc9e62c6c178",
+        "type": "ui-number-input",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "I",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "99.99",
+        "step": "0.01",
+        "tooltip": "",
+        "passthru": true,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "stacked",
+        "x": 430,
+        "y": 100,
+        "wires": [
+            [
+                "1df00faa7ed2f0ba"
+            ]
+        ]
+    },
+    {
+        "id": "3d84ad479d83d915",
+        "type": "ui-number-input",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "D",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "99.99",
+        "step": "0.01",
+        "tooltip": "",
+        "passthru": true,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "stacked",
+        "x": 430,
+        "y": 140,
+        "wires": [
+            [
+                "c1cc073a29dae67c"
+            ]
+        ]
+    },
+    {
+        "id": "90e911e2ab3eaf70",
+        "type": "ui-number-input",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "T",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "200",
+        "step": "1",
+        "tooltip": "",
+        "passthru": true,
+        "sendOnBlur": true,
+        "sendOnEnter": true,
+        "className": "",
+        "clearable": false,
+        "icon": "",
+        "iconPosition": "left",
+        "iconInnerPosition": "inside",
+        "spinner": "stacked",
+        "x": 430,
+        "y": 180,
+        "wires": [
+            [
+                "c822af1c209c1a46"
+            ]
+        ]
+    },
+    {
+        "id": "38950161e31bc57d",
+        "type": "ui-button",
+        "z": "17a988668c938554",
+        "group": "${ui-group}",
+        "name": "",
+        "label": "Write",
+        "order": 0,
+        "width": "1",
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 430,
+        "y": 220,
+        "wires": [
+            [
+                "addef47733fb77fb"
+            ]
+        ]
+    },
+    {
+        "id": "bda0ca8a7992232b",
+        "type": "influxdb out",
+        "z": "17a988668c938554",
+        "influxdb": "d26ae779cd42b188",
+        "name": "",
+        "measurement": "heater_data",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "s",
+        "retentionPolicyV18Flux": "",
+        "org": "A2P",
+        "bucket": "Pultrusion",
+        "x": 520,
+        "y": 300,
+        "wires": []
+    },
+    {
         "id": "3022cabe2fb20b68",
         "type": "inject",
         "z": "5c24d4e82af3d5c6",
@@ -267,7 +1284,7 @@
         "z": "5c24d4e82af3d5c6",
         "g": "65c1a42bc44ee55b",
         "plc_connector": "b17d34f713647319",
-        "variables": "Arp.Plc.Eclr/Zone",
+        "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/TestL,Arp.Plc.Eclr/TestR",
         "searchbar": "",
         "x": 390,
         "y": 160,
@@ -391,8 +1408,8 @@
         "vars": "",
         "var_list": "{\"items\":[]}",
         "searchbar": "Arp.Plc.Eclr/Zone[9].PV",
-        "x": 980,
-        "y": 860,
+        "x": 970,
+        "y": 840,
         "wires": [
             [
                 "9ec317653e0d569a"
@@ -421,7 +1438,7 @@
         "type": "function",
         "z": "5c24d4e82af3d5c6",
         "name": "Gefran1 Formatter",
-        "func": "var zones = msg.payload.variables[0].value;\nvar lastValues = [];\nvar msgs = [{},{},{},{},{},{}];\nvar anyChanges = [false,false,false,false,false,false];\n\nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nfor (var unit = 0; unit < 6; unit++)\n{\n    lastValues[unit] = global.get(`Write${unit}Vals`);\n\n    msgs[unit] = {\n        payload: [\n            0,\n            1,\n            2,\n            3,\n            4,\n            5,\n            6,\n            7,\n            8,\n            9,\n            10,\n            11,\n            12,\n            13,\n            14,\n            15,\n        ]\n    };\n\n    for (var z = 0; z < 4; z++)\n    {\n        msgs[unit].payload[z*4+0] = makeWord(clampTemp(zones[4*unit+z].SP));\n        msgs[unit].payload[z*4+1] = makeWord((zones[4*unit+z].Enabled?0:8) + (zones[4*unit+z].SelfTune?4:0));\n        msgs[unit].payload[z*4+2] = makeWord(clampTemp(0));\n        msgs[unit].payload[z*4+3] = makeWord(clampTemp(0));\n    }\n    if (Array.isArray(lastValues[unit])) {\n        for (var i = 0; i < 16; i++) {\n            if (msgs[unit].payload[i] != lastValues[unit][i]) {\n                anyChanges[unit] = true;\n                break;\n            }\n        }\n    }\n    else {\n        anyChanges[unit] = true;\n    }\n\n    if (anyChanges[unit])\n    {\n        global.set(`Write${unit}Vals`, msgs[unit].payload);\n    }\n}\n\nreturn [\n    anyChanges[0] ? msgs[0] : null,\n    anyChanges[1] ? msgs[1] : null,\n    anyChanges[2] ? msgs[2] : null,\n    anyChanges[3] ? msgs[3] : null,\n    anyChanges[4] ? msgs[4] : null,\n    anyChanges[5] ? msgs[5] : null,\n];\n",
+        "func": "var zones = msg.payload.variables[0].value;\nglobal.set(`TestL`, msg.payload.variables[1].value === true);\nglobal.set(`TestR`, msg.payload.variables[2].value === true);\nvar lastValues = [];\nvar msgs = [{},{},{},{},{},{}];\nvar anyChanges = [false,false,false,false,false,false];\n\nfor(var i = 0; i < 24; i++)\n    global.set(`${i+1}Enabled`, zones[i].Enabled);\n    \nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nfor (var unit = 0; unit < 6; unit++)\n{\n    lastValues[unit] = global.get(`Write${unit}Vals`);\n\n    msgs[unit] = {\n        payload: [\n            0,\n            1,\n            2,\n            3,\n            4,\n            5,\n            6,\n            7,\n            8,\n            9,\n            10,\n            11,\n            12,\n            13,\n            14,\n            15,\n        ]\n    };\n\n    for (var z = 0; z < 4; z++)\n    {\n        msgs[unit].payload[z*4+0] = makeWord(clampTemp(zones[4*unit+z].SP));\n        msgs[unit].payload[z*4+1] = makeWord((zones[4*unit+z].Enabled?0:8) + (zones[4*unit+z].SelfTune?4:0));\n        msgs[unit].payload[z*4+2] = makeWord(clampTemp(0));\n        msgs[unit].payload[z*4+3] = makeWord(clampTemp(0));\n    }\n    if (Array.isArray(lastValues[unit])) {\n        for (i = 0; i < 16; i++) {\n            if (msgs[unit].payload[i] != lastValues[unit][i]) {\n                anyChanges[unit] = true;\n                break;\n            }\n        }\n    }\n    else {\n        anyChanges[unit] = true;\n    }\n\n    if (anyChanges[unit])\n    {\n        global.set(`Write${unit}Vals`, msgs[unit].payload);\n    }\n}\n\nreturn [\n    anyChanges[0] ? msgs[0] : null,\n    anyChanges[1] ? msgs[1] : null,\n    anyChanges[2] ? msgs[2] : null,\n    anyChanges[3] ? msgs[3] : null,\n    anyChanges[4] ? msgs[4] : null,\n    anyChanges[5] ? msgs[5] : null,\n];\n",
         "outputs": 6,
         "timeout": 0,
         "noerr": 0,
@@ -456,8 +1473,8 @@
         "type": "function",
         "z": "5c24d4e82af3d5c6",
         "name": "PLCnext Formatter",
-        "func": "var values = msg.payload;\nmsg.payload = {\n    variables: []\n}\n\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"10\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"11\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"12\")\n    firstZone = 9;\nelse if (msg.modbusRequest.unitid == \"13\")\n    firstZone = 13;\nelse if (msg.modbusRequest.unitid == \"14\")\n    firstZone = 17;\nelse if (msg.modbusRequest.unitid == \"15\")\n    firstZone = 21;\n\nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar v = 0;\nfor (var z=0; z<2; z++)\n{\n    msg.payload.variables[v++] = makeVariable(z,\"PV\",values[z*9+0]);\n    msg.payload.variables[v++] = makeVariable(z,\"SPA\",values[z*9+1]);\n    msg.payload.variables[v++] = makeVariable(z,\"Output\",values[z*9+2]*0.1);\n    msg.payload.variables[v++] = makeVariable(z,\"Alarms\",values[z*9+3]);\n    msg.payload.variables[v++] = makeVariable(z,\"Amps\", values[z*9+4]*0.1);\n    msg.payload.variables[v++] = makeVariable(z,\"Enabled\", (values[z*9+5] & 8) == 0);\n    msg.payload.variables[v++] = makeVariable(z,\"SelfTuning\", (values[z*9+5] & 4) > 0);\n}\n\nreturn msg;",
-        "outputs": 1,
+        "func": "var values = msg.payload;\nmsg.payload = {};\nmsg.payload.variables = [];\n\nvar testL = global.get(`TestL`);\nvar testR = global.get(`TestR`);\nvar m = global.get(`machineNumber`);\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"10\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"11\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"12\")\n    firstZone = 9;\nelse if (msg.modbusRequest.unitid == \"13\")\n    firstZone = 13;\nelse if (msg.modbusRequest.unitid == \"14\")\n    firstZone = 17;\nelse if (msg.modbusRequest.unitid == \"15\")\n    firstZone = 21;\n\nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nvar stream = m*2-1;\nif (m > 1 && firstZone < 13)\n    stream -= 1;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar v = 0;\nvar influxMsg = {tags:{\n    machine: m,\n    stream: stream,\n    zone: firstZone,\n}}\noutputMsg = {};\noutputMsg.payload = [];\nmqttMsg = {};\nmqttMsg.topic = `AAP/Hamilton/Pultrusion/Machine${m}/stream${stream}/`;\nmqttMsg.payload = [{},{}];\nfor (var z=0; z<2; z++)\n{\n    var pv = values[z*9+0];\n    var spa = values[z*9+1];\n    var output = values[z*9+2]*0.1;\n    var alarms = values[z*9+3];\n    var amps = values[z*9+4]*0.1;\n    var enabled = (values[z*9+5] & 8) == 0;\n    var selfTuning = (values[z*9+5] & 4) > 0;\n    var zone = (z + firstZone - 1)%12 + 1;\n    var plug = z + firstZone;\n    var test = z<13 ? testR : testL;\n    \n    if (global.get(`${z + firstZone}Enabled`))\n        outputMsg.payload[z] = [\n            {\n                duty_pct:output,\n            },\n            {\n                machine: m,\n                stream: stream,\n                zone: zone,\n                plug: plug,\n                test: test,\n            },\n        ];\n    flow.set(`${z+firstZone}PV`, pv);\n    flow.set(`${z+firstZone}Output`, output);\n    if (output > 0.05)\n        flow.set(`${z+firstZone}Amps`, amps);\n    msg.payload.variables[v++] = makeVariable(z,\"PV\",pv);\n    msg.payload.variables[v++] = makeVariable(z,\"SPA\",spa);\n    msg.payload.variables[v++] = makeVariable(z,\"Output\",output);\n    msg.payload.variables[v++] = makeVariable(z,\"Alarms\",alarms);\n    msg.payload.variables[v++] = makeVariable(z,\"Amps\", amps);\n    msg.payload.variables[v++] = makeVariable(z,\"Enabled\", enabled);\n    msg.payload.variables[v++] = makeVariable(z,\"SelfTuning\", selfTuning);\n    mqttMsg.payload[z].zone = (z + firstZone - 1)%12 + 1;\n    mqttMsg.payload[z].fields = [];\n    var q =0;\n    mqttMsg.payload[z].fields[q++] = {name: \"PV\", value: pv};\n    mqttMsg.payload[z].fields[q++] = {name: \"SPA\", value: spa};\n    mqttMsg.payload[z].fields[q++] = {name: \"Output\", value: output};\n    mqttMsg.payload[z].fields[q++] = {name: \"Alarms\", value: alarms};\n    if (output > 0.05)\n        mqttMsg.payload[z].fields[q++] = {name: \"Amps\", value: amps};\n    mqttMsg.payload[z].fields[q++] = {name: \"Enabled\", value: enabled};\n    mqttMsg.payload[z].fields[q++] = {name: \"SelfTuning\", value: selfTuning};\n}\n\nreturn [msg,outputMsg,mqttMsg];",
+        "outputs": 3,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
@@ -468,6 +1485,12 @@
         "wires": [
             [
                 "1f988a0adf69e6cf"
+            ],
+            [
+                "f160ef655a57b913"
+            ],
+            [
+                "23006588a9051313"
             ]
         ]
     },
@@ -1009,6 +2032,1544 @@
                 "6339b138708afb43"
             ],
             []
+        ]
+    },
+    {
+        "id": "152edbc37f4edd38",
+        "type": "inject",
+        "z": "5c24d4e82af3d5c6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "30",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 510,
+        "y": 1180,
+        "wires": [
+            [
+                "fe59a8ac2ae579ce"
+            ]
+        ]
+    },
+    {
+        "id": "fe59a8ac2ae579ce",
+        "type": "function",
+        "z": "5c24d4e82af3d5c6",
+        "name": "temp & amps",
+        "func": "msg.payload = [];\n\nvar m = global.get(`machineNumber`);\nvar stream = m*2-1;\nif (m == 1)\n    stream = 2;\n\nvar sampleL = null;\nvar testL = global.get(`TestL`);\nif (testL)\n    sampleL = {\n        payload:{\n            timestamp: Date.now()\n        },\n        filename:\"nodered:/data/stream5.csv\",\n        columns:\"timestamp\",\n    };\nvar sampleR = null;\nvar testR = global.get(`TestR`);\nif (testR)\n    sampleR = {\n        payload:{\n            timestamp: Date.now()\n        },\n        filename:\"nodered:/data/stream4.csv\",\n        columns:\"timestamp\",\n    };\n\nvar j = 0;\nfor(var i = 1; i <= 24; i++)\n{\n    if (global.get(`${i}Enabled`))\n    {\n        msg.payload[j++] = [\n            {\n                temperature_F: flow.get(`${i}PV`),\n                current_A: flow.get(`${i}Amps`),\n            },\n            {\n                machine: global.get(`machineNumber`),\n                stream: i<13 ? stream - 1 : stream,\n                zone: (i-1)%12+1,\n                plug: i,\n                test: i<13 ? testR : testL,\n            },\n        ]\n        if (testL && i >= 13)\n        {\n            sampleL.columns += `,temp${i-12},duty${i-12},amps${i-12}`;\n            sampleL.payload[`temp${i-12}`] = flow.get(`${i}PV`);\n            sampleL.payload[`duty${i-12}`] = flow.get(`${i}Output`);\n            sampleL.payload[`amps${i-12}`] = flow.get(`${i}Amps`);\n        }\n        if (testR && i < 13)\n        {\n            sampleR.columns += `,temp${i},duty${i},amps${i}`;\n            sampleR.payload[`temp${i}`] = flow.get(`${i}PV`);\n            sampleR.payload[`duty${i}`] = flow.get(`${i}Output`);\n            sampleR.payload[`amps${i}`] = flow.get(`${i}Amps`);\n        }\n    }\n}\nreturn [ msg, sampleL, sampleR ];",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 1180,
+        "wires": [
+            [
+                "f160ef655a57b913"
+            ],
+            [
+                "ad7e7e718b271bc5"
+            ],
+            [
+                "ad7e7e718b271bc5"
+            ]
+        ]
+    },
+    {
+        "id": "f160ef655a57b913",
+        "type": "influxdb out",
+        "z": "5c24d4e82af3d5c6",
+        "influxdb": "d5e4db8ea8e1e6ca",
+        "name": "",
+        "measurement": "heater_data",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "A2P",
+        "bucket": "Pultrusion",
+        "x": 1060,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "ad7e7e718b271bc5",
+        "type": "csv",
+        "z": "5c24d4e82af3d5c6",
+        "name": "",
+        "spec": "rfc",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\r\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": true,
+        "include_null_values": true,
+        "x": 970,
+        "y": 1200,
+        "wires": [
+            [
+                "f460d46bd537a4fc"
+            ]
+        ]
+    },
+    {
+        "id": "f460d46bd537a4fc",
+        "type": "file",
+        "z": "5c24d4e82af3d5c6",
+        "name": "",
+        "filename": "filename",
+        "filenameType": "msg",
+        "appendNewline": false,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "none",
+        "x": 1140,
+        "y": 1200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8a722be4db20f1af",
+        "type": "mqtt out",
+        "z": "5c24d4e82af3d5c6",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4f139bbd1b4c034f",
+        "x": 1270,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "23006588a9051313",
+        "type": "function",
+        "z": "5c24d4e82af3d5c6",
+        "name": "zone",
+        "func": "msg1 = {\n    topic: msg.topic + `zone${msg.payload[0].zone}/`,\n    payload: msg.payload[0].fields,\n}\nmsg2 = {\n    topic: msg.topic + `zone${msg.payload[1].zone}/`,\n    payload: msg.payload[1].fields,\n}\nreturn [msg1, msg2];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 970,
+        "y": 920,
+        "wires": [
+            [
+                "8f4180b151d698ec"
+            ],
+            [
+                "8f4180b151d698ec"
+            ]
+        ]
+    },
+    {
+        "id": "8f4180b151d698ec",
+        "type": "function",
+        "z": "5c24d4e82af3d5c6",
+        "name": "fields",
+        "func": "msgs = [];\nfor (var i = 0; i < 7 && i < msg.payload.length; i++) {\n    msgs[i] = {\n        topic: msg.topic + msg.payload[i].name,\n        payload: msg.payload[i].value,\n    }\n}\nreturn msgs;",
+        "outputs": 7,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 920,
+        "wires": [
+            [
+                "8a722be4db20f1af"
+            ],
+            [
+                "8a722be4db20f1af"
+            ],
+            [
+                "8a722be4db20f1af"
+            ],
+            [
+                "8a722be4db20f1af"
+            ],
+            [
+                "8a722be4db20f1af"
+            ],
+            [
+                "8a722be4db20f1af"
+            ],
+            [
+                "8a722be4db20f1af"
+            ]
+        ]
+    },
+    {
+        "id": "0366485f124564cd",
+        "type": "function",
+        "z": "5c24d4e82af3d5c6",
+        "name": "Set Global Constants",
+        "func": "global.set(`machineNumber`, 2);",
+        "outputs": 0,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "39400f3f87b5a66f",
+        "type": "inject",
+        "z": "5c24d4e82af3d5c6",
+        "name": "Init",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.01",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 320,
+        "wires": [
+            [
+                "0366485f124564cd"
+            ]
+        ]
+    },
+    {
+        "id": "a87f64e14c7b517c",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read3",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "b8436940cd504d64",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 420,
+        "wires": [
+            [
+                "d332971c79e6f731"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "727f6e297013d8e2",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read2",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "b99a88ddc66f488d",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 260,
+        "wires": [
+            [
+                "d944412902949ae4"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8a0c865a1cb08ff7",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read1",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "2738082274d8a592",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 100,
+        "wires": [
+            [
+                "2717c82094531bb2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "d1c461c0b69db303",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read6",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "8ed1856c0dd889fd",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 900,
+        "wires": [
+            [
+                "be5357bbae2ad8d5"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "dc07416c2bee24cf",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read5",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "e40be0edeab0ba78",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 740,
+        "wires": [
+            [
+                "9309b66d795329e2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "ef0d7c9b53cf8a3a",
+        "type": "modbus-getter",
+        "z": "35b16d5ecdf07d35",
+        "name": "Read4",
+        "showStatusActivities": false,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "72",
+        "quantity": "18",
+        "server": "a3b7149c09054706",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 490,
+        "y": 580,
+        "wires": [
+            [
+                "ad0da584d7fd14c6"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "39dfa52bf98b2f33",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 1 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "f181fbfb9e518003",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "2738082274d8a592",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "1",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "2717c82094531bb2",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 100,
+        "wires": [
+            [
+                "39dfa52bf98b2f33"
+            ],
+            [
+                "ec7745182424622a"
+            ],
+            [
+                "49cde45fb0374a1f"
+            ],
+            [
+                "8b7026f87f8a267e"
+            ]
+        ]
+    },
+    {
+        "id": "ec7745182424622a",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 2 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "1253b6a437285da6",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "2738082274d8a592",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "2",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "49cde45fb0374a1f",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 3 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "f660d8ba8ff496e5",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "2738082274d8a592",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "3",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "8b7026f87f8a267e",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 4 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "3167f378c6aed5c6",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "2738082274d8a592",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "4",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "0f2dce9146065c69",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 5 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "25e964d05769ad33",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b99a88ddc66f488d",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "5",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "d944412902949ae4",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 260,
+        "wires": [
+            [
+                "0f2dce9146065c69"
+            ],
+            [
+                "9c83d11c7f9399c6"
+            ],
+            [
+                "79e6493df2f8cb7a"
+            ],
+            [
+                "56e597155071d27e"
+            ]
+        ]
+    },
+    {
+        "id": "9c83d11c7f9399c6",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 6 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "7dba836c908eaeda",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b99a88ddc66f488d",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "6",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "79e6493df2f8cb7a",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 7 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "400619ca90c1f9cb",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b99a88ddc66f488d",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "7",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "56e597155071d27e",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 8 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "961365fe4577e5b8",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b99a88ddc66f488d",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "8",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "ef0f68ca3da76d24",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 9 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "29e8999daff62fd0",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b8436940cd504d64",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "9",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "d332971c79e6f731",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 420,
+        "wires": [
+            [
+                "ef0f68ca3da76d24"
+            ],
+            [
+                "be6260cde63ab594"
+            ],
+            [
+                "1083138d656222c8"
+            ],
+            [
+                "e406d2c3d5c3ed5a"
+            ]
+        ]
+    },
+    {
+        "id": "be6260cde63ab594",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 10 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "9fedbc3207bc1d1f",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b8436940cd504d64",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "10",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "1083138d656222c8",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 11 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "962b03b723568095",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b8436940cd504d64",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "11",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "e406d2c3d5c3ed5a",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 12 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "910a88da05a8d7e1",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "b8436940cd504d64",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "12",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "201a677f36f5205c",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 13 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "efee407ce93b5e4c",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "a3b7149c09054706",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "13",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "ad0da584d7fd14c6",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 580,
+        "wires": [
+            [
+                "201a677f36f5205c"
+            ],
+            [
+                "8e4903c13f3bb4c8"
+            ],
+            [
+                "9d4e6ceebe5ad793"
+            ],
+            [
+                "8c5b318674e0b145"
+            ]
+        ]
+    },
+    {
+        "id": "8e4903c13f3bb4c8",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 14 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "03362c158af4515a",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "a3b7149c09054706",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "14",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "9d4e6ceebe5ad793",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 15 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "8fee11719da026cb",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "a3b7149c09054706",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "15",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "8c5b318674e0b145",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 16 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "ecf3828d5151f88a",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "a3b7149c09054706",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "16",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "22de91f333805219",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 17 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "3d0bc1256ae3ba0c",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "e40be0edeab0ba78",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "17",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "9309b66d795329e2",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 740,
+        "wires": [
+            [
+                "22de91f333805219"
+            ],
+            [
+                "fb2e38d1adc08c64"
+            ],
+            [
+                "99ecc83a4aee47e9"
+            ],
+            [
+                "1df48a76bf22d10a"
+            ]
+        ]
+    },
+    {
+        "id": "fb2e38d1adc08c64",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 18 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "3311681ac7f4bd7d",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "e40be0edeab0ba78",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "18",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "99ecc83a4aee47e9",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 19 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "b1d89aa83bd1f941",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "e40be0edeab0ba78",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "19",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "1df48a76bf22d10a",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 20 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "ea5b14fdcc2e59e0",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "e40be0edeab0ba78",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "20",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "c4b9fed6d616333e",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 21 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "e879e027079cb4b0",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "8ed1856c0dd889fd",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "21",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "72",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "be5357bbae2ad8d5",
+        "type": "function",
+        "z": "35b16d5ecdf07d35",
+        "name": "Split Zone Data",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 900,
+        "wires": [
+            [
+                "c4b9fed6d616333e"
+            ],
+            [
+                "12d0160763cf9a9a"
+            ],
+            [
+                "858dfb25947c5795"
+            ],
+            [
+                "c7130403069e9200"
+            ]
+        ]
+    },
+    {
+        "id": "12d0160763cf9a9a",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 22 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "0ec39d76046a7b9c",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "8ed1856c0dd889fd",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "22",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "76",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "858dfb25947c5795",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 23 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "8c2c3e5f425e011c",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "8ed1856c0dd889fd",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "23",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "80",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "c7130403069e9200",
+        "type": "subflow:17a988668c938554",
+        "z": "35b16d5ecdf07d35",
+        "name": "Zone 24 PID",
+        "env": [
+            {
+                "name": "ui-group",
+                "value": "62fc3d5a1ca408de",
+                "type": "conf-type"
+            },
+            {
+                "name": "gefran",
+                "value": "8ed1856c0dd889fd",
+                "type": "conf-type"
+            },
+            {
+                "name": "zoneNumber",
+                "value": "24",
+                "type": "num"
+            },
+            {
+                "name": "address",
+                "value": "84",
+                "type": "num"
+            },
+            {
+                "key": "DB2_SF_ORDER",
+                "value": "1",
+                "type": "str"
+            }
+        ],
+        "x": 890,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "28760b4314950aac",
+        "type": "ui-button",
+        "z": "35b16d5ecdf07d35",
+        "group": "61844bc14615df73",
+        "name": "GetAllButton",
+        "label": "Get All",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "8a0c865a1cb08ff7",
+                "727f6e297013d8e2",
+                "a87f64e14c7b517c"
+            ]
+        ]
+    },
+    {
+        "id": "fb80053344713a6a",
+        "type": "ui-button",
+        "z": "35b16d5ecdf07d35",
+        "group": "189eadc21145ecd0",
+        "name": "GetAllButton",
+        "label": "Get All",
+        "order": 1,
+        "width": "2",
+        "height": "1",
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 250,
+        "y": 740,
+        "wires": [
+            [
+                "ef0d7c9b53cf8a3a",
+                "dc07416c2bee24cf",
+                "d1c461c0b69db303"
+            ]
         ]
     }
 ]
