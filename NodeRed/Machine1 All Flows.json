@@ -990,8 +990,8 @@
         "vars": "",
         "var_list": "{\"items\":[]}",
         "searchbar": "Arp.Plc.Eclr/Zone[9].PV",
-        "x": 930,
-        "y": 420,
+        "x": 1070,
+        "y": 380,
         "wires": [
             []
         ]
@@ -1000,23 +1000,17 @@
         "id": "5657e8d6b72dd7c0",
         "type": "function",
         "z": "f4c312cdd0835c2f",
-        "name": "Gefran Parse",
-        "func": "var values = msg.payload;\nmsg.payload = {};\nmsg.payload.variables = [];\n\nvar testL = global.get(`TestL`);\nvar testR = global.get(`TestR`);\nvar batchNumberL = global.get(`BatchNumberL`);\nvar batchNumberR = global.get(`BatchNumberR`);\nvar m = global.get(`machineNumber`);\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"1\" || msg.modbusRequest.unitid == \"4\" || msg.modbusRequest.unitid == \"10\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"2\" || msg.modbusRequest.unitid == \"5\" || msg.modbusRequest.unitid == \"11\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"3\" || msg.modbusRequest.unitid == \"6\" || msg.modbusRequest.unitid == \"12\")\n    firstZone = 9;\nelse if (msg.modbusRequest.unitid == \"7\" || msg.modbusRequest.unitid == \"13\")\n    firstZone = 13;\nelse if (msg.modbusRequest.unitid == \"8\" || msg.modbusRequest.unitid == \"14\")\n    firstZone = 17;\nelse if (msg.modbusRequest.unitid == \"9\" || msg.modbusRequest.unitid == \"15\")\n    firstZone = 21;\n\nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nvar stream = m*2-1;\nif (m > 1 && firstZone < 13)\n    stream -= 1;\n\nfunction makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone+firstZone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar influxMsg = {};\ninfluxMsg.payload = [];\nmqttMsg = {};\nmqttMsg.topic = `AAP/Hamilton/Pultrusion/Machine${m}/stream${stream}/`;\nmqttMsg.payload = [{},{}];\nvar v = 0;\nfor (var z=0; z<2; z++)\n{\n    var pv = values[z*9+0];\n    var spa = values[z*9+1];\n    var output = values[z*9+2]*0.1;\n    var alarms = values[z*9+3];\n    var amps = values[z*9+4]*0.1;\n    var enabled = (values[z*9+5] & 8) == 0;\n    var selfTuning = (values[z*9+5] & 4) > 0;\n    var zone = (z + firstZone - 1)%12 + 1;\n    var plug = z + firstZone;\n    var test = z<13 ? testR : testL;\n    var batchNumber = z<13 ? batchNumberR : batchNumberL;\n    \n    //PLC\n    msg.payload.variables[v++] = makeVariable(z,\"PV\", pv);\n    msg.payload.variables[v++] = makeVariable(z,\"SPA\", spa);\n    msg.payload.variables[v++] = makeVariable(z,\"Output\", output);\n    msg.payload.variables[v++] = makeVariable(z,\"Alarms\", alarms);\n    msg.payload.variables[v++] = makeVariable(z,\"Amps\", amps);\n    msg.payload.variables[v++] = makeVariable(z,\"Enabled\", enabled);\n    msg.payload.variables[v++] = makeVariable(z,\"SelfTuning\", selfTuning);\n    \n    //MQTT\n    mqttMsg.payload[z].zone = (z + firstZone - 1)%12 + 1;\n    mqttMsg.payload[z].fields = [];\n    var q =0;\n    mqttMsg.payload[z].fields[q++] = {name: \"PV\", value: pv};\n    mqttMsg.payload[z].fields[q++] = {name: \"SPA\", value: spa};\n    mqttMsg.payload[z].fields[q++] = {name: \"Output\", value: output};\n    mqttMsg.payload[z].fields[q++] = {name: \"Alarms\", value: alarms};\n    if (output > 0.05)\n        mqttMsg.payload[z].fields[q++] = {name: \"Amps\", value: amps};\n    mqttMsg.payload[z].fields[q++] = {name: \"Enabled\", value: enabled};\n    mqttMsg.payload[z].fields[q++] = {name: \"SelfTuning\", value: selfTuning};\n    mqttMsg.payload[z].fields[q++] = {name: \"BatchNumber\", value: batchNumber};\n        \n    //InfluxDB\n    flow.set(`${z+firstZone}PV`, pv);\n    flow.set(`${z+firstZone}Output`, output);\n    if (output > 0.05)\n        flow.set(`${z+firstZone}Amps`, amps);\n    if (global.get(`${z + firstZone}Enabled`))\n        influxMsg.payload[z] = [\n            {\n                duty_pct:output,\n            },\n            {\n                machine: m,\n                stream: stream,\n                zone: zone,\n                plug: plug,\n                test: test,\n                batchNumber: batchNumber,\n            },\n        ];\n}\n\nreturn [msg,mqttMsg,influxMsg];",
-        "outputs": 3,
+        "name": "Influx Format",
+        "func": "var influxMsg = {};\ninfluxMsg.payload = [];\nvar v = 0;\nfor (var z=0; z<2; z++)\n{\n    //set flow variables for slower poll rate to pick up later\n    flow.set(`${msg.payload[z].plug}PV`, msg.payload[z].pv);\n    flow.set(`${msg.payload[z].plug}Output`, msg.payload[z].output);\n    if (msg.payload[z].output > 0.05)\n        flow.set(`${msg.payload[z].plug}Amps`, msg.payload[z].amps);\n\n    //output duty to influx at regular rate\n    if (global.get(`${msg.payload[z].plug}Enabled`))\n        influxMsg.payload[z] = [\n            {\n                duty_pct:msg.payload[z].output,\n            },\n            {\n                machine: msg.payload[z].machine,\n                stream: msg.payload[z].stream,\n                zone: msg.payload[z].zone,\n                plug: msg.payload[z].plug,\n                test: msg.payload[z].test,\n            },\n        ];\n}\n\nreturn influxMsg;",
+        "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 690,
-        "y": 480,
+        "x": 870,
+        "y": 560,
         "wires": [
-            [
-                "e5d2b6aa3223fb6c"
-            ],
-            [
-                "f87dbe2dfb6ddb01"
-            ],
             [
                 "ee202aa932f38ac1"
             ]
@@ -1047,7 +1041,7 @@
         "y": 540,
         "wires": [
             [
-                "5657e8d6b72dd7c0"
+                "493c26c14bdf45ab"
             ],
             []
         ]
@@ -1077,7 +1071,7 @@
         "y": 460,
         "wires": [
             [
-                "5657e8d6b72dd7c0"
+                "493c26c14bdf45ab"
             ],
             []
         ]
@@ -1107,7 +1101,7 @@
         "y": 380,
         "wires": [
             [
-                "5657e8d6b72dd7c0"
+                "493c26c14bdf45ab"
             ],
             []
         ]
@@ -1209,7 +1203,7 @@
         "y": 420,
         "wires": [
             [
-                "5657e8d6b72dd7c0"
+                "493c26c14bdf45ab"
             ],
             []
         ]
@@ -1239,7 +1233,7 @@
         "y": 500,
         "wires": [
             [
-                "5657e8d6b72dd7c0"
+                "493c26c14bdf45ab"
             ],
             []
         ]
@@ -1269,7 +1263,7 @@
         "y": 580,
         "wires": [
             [
-                "5657e8d6b72dd7c0"
+                "493c26c14bdf45ab"
             ],
             []
         ]
@@ -1412,7 +1406,7 @@
         "retentionPolicyV18Flux": "",
         "org": "AAP",
         "bucket": "Pultrusion",
-        "x": 1000,
+        "x": 1140,
         "y": 600,
         "wires": []
     },
@@ -1421,7 +1415,7 @@
         "type": "function",
         "z": "f4c312cdd0835c2f",
         "name": "PLC Parse",
-        "func": "var zones = []\nfor (var v = 0; v < msg.payload.variables.length; v++) {\n    switch(msg.payload.variables[v].path) {\n        case \"Arp.Plc.Eclr/Zone\":\n            zones = msg.payload.variables[v].value;\n            break;\n        case \"Arp.Plc.Eclr/TestR\":\n            global.set(`TestR`, msg.payload.variables[v].value === true);\n            break;\n        case \"Arp.Plc.Eclr/TestL\":\n            global.set(`TestL`, msg.payload.variables[v].value === true);\n            break;\n        case \"Arp.Plc.Eclr/BatchNumberR\":\n            global.set(`BatchNumberR`, msg.payload.variables[v].value);\n            break;\n        case \"Arp.Plc.Eclr/BatchNumberL\":\n            global.set(`BatchNumberL`, msg.payload.variables[v].value);\n            break;\n    }\n}\nvar lastValues = [];\nvar msgs = [{},{},{},{},{},{}];\nvar anyChanges = [false,false,false,false,false,false];\n\nfor(var i = 0; i < zones.length; i++)\n    global.set(`${i+1}Enabled`, zones[i].Enabled);\n    \nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nfor (var unit = 0; unit < zones.length / 4; unit++)\n{\n    lastValues[unit] = global.get(`Write${unit}Vals`);\n\n    msgs[unit] = {\n        payload: [\n            0,\n            1,\n            2,\n            3,\n            4,\n            5,\n            6,\n            7,\n            8,\n            9,\n            10,\n            11,\n            12,\n            13,\n            14,\n            15,\n        ]\n    };\n\n    for (var z = 0; z < 4; z++)\n    {\n        msgs[unit].payload[z*4+0] = makeWord(clampTemp(zones[4*unit+z].SP));\n        msgs[unit].payload[z*4+1] = makeWord((zones[4*unit+z].Enabled?0:8) + (zones[4*unit+z].SelfTune?4:0));\n        msgs[unit].payload[z*4+2] = makeWord(clampTemp(0));\n        msgs[unit].payload[z*4+3] = makeWord(clampTemp(0));\n    }\n    if (Array.isArray(lastValues[unit])) {\n        for (i = 0; i < 16; i++) {\n            if (msgs[unit].payload[i] != lastValues[unit][i]) {\n                anyChanges[unit] = true;\n                break;\n            }\n        }\n    }\n    else {\n        anyChanges[unit] = true;\n    }\n\n    if (anyChanges[unit])\n    {\n        global.set(`Write${unit}Vals`, msgs[unit].payload);\n    }\n}\n\nreturn [\n    anyChanges[0] ? msgs[0] : null,\n    anyChanges[1] ? msgs[1] : null,\n    anyChanges[2] ? msgs[2] : null,\n    anyChanges[3] ? msgs[3] : null,\n    anyChanges[4] ? msgs[4] : null,\n    anyChanges[5] ? msgs[5] : null,\n];\n",
+        "func": "var zones = []\nfor (var v = 0; v < msg.payload.variables.length; v++) {\n    switch(msg.payload.variables[v].path) {\n        case \"Arp.Plc.Eclr/Zone\":\n            zones = msg.payload.variables[v].value;\n            break;\n        case \"Arp.Plc.Eclr/TestR\":\n            global.set(`TestR`, msg.payload.variables[v].value === true);\n            break;\n        case \"Arp.Plc.Eclr/TestL\":\n            global.set(`TestL`, msg.payload.variables[v].value === true);\n            break;\n    }\n}\nvar lastValues = [];\nvar msgs = [{},{},{},{},{},{}];\nvar anyChanges = [false,false,false,false,false,false];\n\nfor(var i = 0; i < zones.length; i++)\n    global.set(`${i+1}Enabled`, zones[i].Enabled);\n    \nfunction clampTemp(temp)\n{\n    if (temp < 32)\n        return 32;\n    if (temp > 999)\n        return 999;\n    return temp;\n}\n\nfunction makeWord(num)\n{\n    if (num < 0)\n        num += 32768;\n        \n    return num & 0xFFFF;\n}\n\nfor (var unit = 0; unit < zones.length / 4; unit++)\n{\n    lastValues[unit] = global.get(`Write${unit}Vals`);\n\n    msgs[unit] = {\n        payload: [\n            0,\n            1,\n            2,\n            3,\n            4,\n            5,\n            6,\n            7,\n            8,\n            9,\n            10,\n            11,\n            12,\n            13,\n            14,\n            15,\n        ]\n    };\n\n    for (var z = 0; z < 4; z++)\n    {\n        msgs[unit].payload[z*4+0] = makeWord(clampTemp(zones[4*unit+z].SP));\n        msgs[unit].payload[z*4+1] = makeWord((zones[4*unit+z].Enabled?0:8) + (zones[4*unit+z].SelfTune?4:0));\n        msgs[unit].payload[z*4+2] = makeWord(clampTemp(0));\n        msgs[unit].payload[z*4+3] = makeWord(clampTemp(0));\n    }\n    if (Array.isArray(lastValues[unit])) {\n        for (i = 0; i < 16; i++) {\n            if (msgs[unit].payload[i] != lastValues[unit][i]) {\n                anyChanges[unit] = true;\n                break;\n            }\n        }\n    }\n    else {\n        anyChanges[unit] = true;\n    }\n\n    if (anyChanges[unit])\n    {\n        global.set(`Write${unit}Vals`, msgs[unit].payload);\n    }\n}\n\nreturn [\n    anyChanges[0] ? msgs[0] : null,\n    anyChanges[1] ? msgs[1] : null,\n    anyChanges[2] ? msgs[2] : null,\n    anyChanges[3] ? msgs[3] : null,\n    anyChanges[4] ? msgs[4] : null,\n    anyChanges[5] ? msgs[5] : null,\n];\n",
         "outputs": 6,
         "timeout": 0,
         "noerr": 0,
@@ -1497,15 +1491,15 @@
         "type": "function",
         "z": "f4c312cdd0835c2f",
         "name": "MQTT Zone Split",
-        "func": "msg1 = {\n    topic: msg.topic + `zone${msg.payload[0].zone}/`,\n    payload: msg.payload[0].fields,\n}\nmsg2 = {\n    topic: msg.topic + `zone${msg.payload[1].zone}/`,\n    payload: msg.payload[1].fields,\n}\nreturn [msg1, msg2];",
+        "func": "msgs = [{},{}];\nfor (var z=0; z<2; z++)\n{\n    msgs[z].topic = `AAP/Hamilton/Pultrusion/Machine${msg.payload[z].machine}/stream${msg.payload[z].stream}/zone${msg.payload[z].zone}/`,\n    msgs[z].payload = [];\n    var q =0;\n    msgs[z].payload[q++] = {name: \"PV\", value: msg.payload[z].pv};\n    msgs[z].payload[q++] = {name: \"SPA\", value: msg.payload[z].spa};\n    msgs[z].payload[q++] = {name: \"Output\", value: msg.payload[z].output};\n    msgs[z].payload[q++] = {name: \"Alarms\", value: msg.payload[z].alarms};\n    if (msg.payload[z].output > 0.05)\n        msgs[z].payload[q++] = {name: \"Amps\", value: msg.payload[z].amps};\n    msgs[z].payload[q++] = {name: \"Enabled\", value: msg.payload[z].enabled};\n    msgs[z].payload[q++] = {name: \"SelfTuning\", value: msg.payload[z].selfTuning};\n}\nreturn msgs;",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 910,
-        "y": 500,
+        "x": 870,
+        "y": 480,
         "wires": [
             [
                 "34c1b0695a210f02"
@@ -1527,8 +1521,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1130,
-        "y": 500,
+        "x": 1090,
+        "y": 480,
         "wires": [
             [
                 "7825523c6e2ed580"
@@ -1585,7 +1579,7 @@
         "z": "f4c312cdd0835c2f",
         "g": "7d708220e7352df6",
         "plc_connector": "b17d34f713647319",
-        "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/BatchNumberL,Arp.Plc.Eclr/BatchNumberR,Arp.Plc.Eclr/TestR,Arp.Plc.Eclr/TestL",
+        "variables": "Arp.Plc.Eclr/Zone,Arp.Plc.Eclr/TestR,Arp.Plc.Eclr/TestL",
         "searchbar": "",
         "x": 390,
         "y": 160,
@@ -1631,9 +1625,51 @@
         "correl": "",
         "expiry": "",
         "broker": "a36b7889c5b07072",
-        "x": 1310,
-        "y": 500,
+        "x": 1270,
+        "y": 480,
         "wires": []
+    },
+    {
+        "id": "ab0fc338e896201b",
+        "type": "function",
+        "z": "f4c312cdd0835c2f",
+        "name": "PLC Format",
+        "func": "function makeVariable(zone, name, value)\n{\n    return {\n        path:`Arp.Plc.Eclr/Zone[${zone}].${name}`,\n        value: value,\n        valueType:\"Constant\"\n    }\n}\n\nvar v = 0;\nvar plcMsg = {};\nplcMsg.payload = {variables:[]};\nfor (var z=0; z<2; z++)\n{\n    plcMsg.payload.variables[v++] = makeVariable(msg.payload[z].plug,\"PV\", msg.payload[z].pv);\n    plcMsg.payload.variables[v++] = makeVariable(msg.payload[z].plug,\"SPA\", msg.payload[z].spa);\n    plcMsg.payload.variables[v++] = makeVariable(msg.payload[z].plug,\"Output\", msg.payload[z].output);\n    plcMsg.payload.variables[v++] = makeVariable(msg.payload[z].plug,\"Alarms\", msg.payload[z].alarms);\n    plcMsg.payload.variables[v++] = makeVariable(msg.payload[z].plug,\"Amps\", msg.payload[z].amps);\n    plcMsg.payload.variables[v++] = makeVariable(msg.payload[z].plug,\"Enabled\", msg.payload[z].enabled);\n    plcMsg.payload.variables[v++] = makeVariable(msg.payload[z].plug,\"SelfTuning\", msg.payload[z].selfTuning);\n}\n\nreturn plcMsg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 380,
+        "wires": [
+            [
+                "e5d2b6aa3223fb6c"
+            ]
+        ]
+    },
+    {
+        "id": "493c26c14bdf45ab",
+        "type": "function",
+        "z": "f4c312cdd0835c2f",
+        "name": "Gefran Parse",
+        "func": "var values = msg.payload;\nmsg.payload = [{},{}];\n\nvar testL = global.get(`TestL`);\nvar testR = global.get(`TestR`);\nvar m = global.get(`machineNumber`);\nvar firstZone = 1;\n\nif (msg.modbusRequest.unitid == \"1\" || msg.modbusRequest.unitid == \"4\" || msg.modbusRequest.unitid == \"10\")\n    firstZone = 1;\nelse if (msg.modbusRequest.unitid == \"2\" || msg.modbusRequest.unitid == \"5\" || msg.modbusRequest.unitid == \"11\")\n    firstZone = 5;\nelse if (msg.modbusRequest.unitid == \"3\" || msg.modbusRequest.unitid == \"6\" || msg.modbusRequest.unitid == \"12\")\n    firstZone = 9;\nelse if (msg.modbusRequest.unitid == \"7\" || msg.modbusRequest.unitid == \"13\")\n    firstZone = 13;\nelse if (msg.modbusRequest.unitid == \"8\" || msg.modbusRequest.unitid == \"14\")\n    firstZone = 17;\nelse if (msg.modbusRequest.unitid == \"9\" || msg.modbusRequest.unitid == \"15\")\n    firstZone = 21;\n\nif (msg.topic == \"requestB\")\n    firstZone += 2;\n\nvar stream = m*2-1;\nif (m > 1 && firstZone < 13)\n    stream -= 1;\n\nvar v = 0;\nfor (var z=0; z<2; z++)\n{\n    msg.payload[z].pv = values[z*9+0];\n    msg.payload[z].spa = values[z*9+1];\n    msg.payload[z].output = values[z*9+2]*0.1;\n    msg.payload[z].alarms = values[z*9+3];\n    msg.payload[z].amps = values[z*9+4]*0.1;\n    msg.payload[z].enabled = (values[z*9+5] & 8) == 0;\n    msg.payload[z].selfTuning = (values[z*9+5] & 4) > 0;\n    msg.payload[z].zone = (z + firstZone - 1)%12 + 1;\n    msg.payload[z].plug = z + firstZone;\n    msg.payload[z].test = z<13 ? testR : testL;\n    msg.payload[z].stream = stream;\n    msg.payload[z].machine = m;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 480,
+        "wires": [
+            [
+                "ab0fc338e896201b",
+                "5657e8d6b72dd7c0",
+                "f87dbe2dfb6ddb01"
+            ]
+        ]
     },
     {
         "id": "14d3ab40c201964c",

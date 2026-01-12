@@ -10,12 +10,6 @@ for (var v = 0; v < msg.payload.variables.length; v++) {
         case "Arp.Plc.Eclr/TestL":
             global.set(`TestL`, msg.payload.variables[v].value === true);
             break;
-        case "Arp.Plc.Eclr/BatchNumberR":
-            global.set(`BatchNumberR`, msg.payload.variables[v].value);
-            break;
-        case "Arp.Plc.Eclr/BatchNumberL":
-            global.set(`BatchNumberL`, msg.payload.variables[v].value);
-            break;
     }
 }
 var lastValues = [];
