@@ -3273,7 +3273,7 @@
         "type": "function",
         "z": "35b16d5ecdf07d35",
         "name": "Split Zone Data",
-        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
+        "func": "values = msg.payload;\n\nfunction makeMessage(rawData)\n{\n    return {\n        topic: msg.topic,\n        p: rawData[0] * 0.1,\n        i: rawData[1] * 0.01,\n        d: rawData[2] * 0.01,\n        t: rawData[3],\n    };\n}\n\nreturn [\n    makeMessage(values),\n    makeMessage(values.slice(4,8)),\n    makeMessage(values.slice(8,12)),\n    makeMessage(values.slice(12,16))];",
         "outputs": 4,
         "timeout": 0,
         "noerr": 0,
